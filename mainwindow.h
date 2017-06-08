@@ -31,10 +31,11 @@ public:
 private:
     Ui::MainWindow *ui;
     QPixmap image;                              ///<zmienna zapamiętująca obraz
+    HttpRequestWorker *worker;
 
 private slots:
     void updateData();
-    void handle_result(HttpRequestWorker *worker);
+    void handle_result();
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji

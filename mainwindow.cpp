@@ -6,12 +6,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    worker = new HttpRequestWorker(this);
     setConnections();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete worker;
 }
 
 void MainWindow::setConnections()
@@ -28,6 +30,8 @@ void MainWindow::setConnections()
             qApp, SLOT(aboutQt()));
     connect(ui->actionMinimize, SIGNAL(triggered()),
             this, SLOT(showMinimized()));
+    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),
+            this, SLOT(handle_result()));
 }
 
 /*!
@@ -45,8 +49,6 @@ void MainWindow::updateData()
     //input.add_var("begin", "2014-02-01");
     //input.add_var("api_key", "DEMO_KEY");
 
-    HttpRequestWorker *worker = new HttpRequestWorker(this);
-    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)), this, SLOT(handle_result(HttpRequestWorker*)));
     worker->execute(&input);
 }
 
@@ -55,7 +57,7 @@ void MainWindow::updateData()
  *  - worker - wskaźnik na połączenie
  */
 
-void MainWindow::handle_result(HttpRequestWorker *worker) {
+void MainWindow::handle_result() {
     QString msg;
     QString match = QString("Poland");
     int count = 0;
@@ -85,7 +87,7 @@ void MainWindow::handle_result(HttpRequestWorker *worker) {
     }
 
     qDebug() << "Number of Poland tag at mesage" << count;          // początek informajci o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
-    QMessageBox::information(this, "", msg);
+    //QMessageBox::information(this, "", msg);
 }
 
 /*!
