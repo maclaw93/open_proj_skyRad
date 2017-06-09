@@ -10,27 +10,35 @@ MainWindow::MainWindow(QWidget *parent) :
     setConnections();
 }
 
+/*!
+ * \brief MainWindow::~MainWindow() - funkcja zawierająca destruktory
+ */
+
 MainWindow::~MainWindow()
 {
     delete ui;
     delete worker;
 }
 
+/*!
+ * \brief MainWindow::setConnections() - funkcja zawierająca sygnały i sloty
+ */
+
 void MainWindow::setConnections()
 {
-    connect(ui->actionUpdate, SIGNAL(triggered()),                // połączenie przycisku z menu z metodą aktualizuj dane
+    connect(ui->actionUpdate, SIGNAL(triggered()),                      // połączenie przycisku z menu z metodą aktualizuj dane
             this, SLOT(updateData()));
-    connect(ui->actionExit, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą zamykajacą aplikację
+    connect(ui->actionExit, SIGNAL(triggered()),                        // połączenie przycisku z menu z metodą zamykajacą aplikację
             this, SLOT(close()));
-    connect(ui->actionSaveWindow, SIGNAL(triggered()),          // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
+    connect(ui->actionSaveWindow, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
             this, SLOT(takeScreen()));
-    connect(ui->actionAboutApp, SIGNAL(triggered()),            // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
+    connect(ui->actionAboutApp, SIGNAL(triggered()),                    // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
             this, SLOT(aboutApp()));
-    connect(ui->actionAboutQt, SIGNAL(triggered()),             // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
+    connect(ui->actionAboutQt, SIGNAL(triggered()),                     // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
             qApp, SLOT(aboutQt()));
-    connect(ui->actionMinimize, SIGNAL(triggered()),
+    connect(ui->actionMinimize, SIGNAL(triggered()),                    // połączenie przycisku z menu z metodą minimalizującą okno
             this, SLOT(showMinimized()));
-    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),
+    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),  // połaczenie worker-a z metodą odbierajaca dane
             this, SLOT(handle_result()));
 }
 
@@ -57,38 +65,103 @@ void MainWindow::updateData()
  *  - worker - wskaźnik na połączenie
  */
 
-void MainWindow::handle_result() {
-    QString msg;
+void MainWindow::handle_result()
+{
+    QString message;
     QString match = QString("Poland");
     int count = 0;
 
-    if (worker->error_type == QNetworkReply::NoError) {
-        // communication was successful
-        msg = "Success - Response: " + worker->response;
-    }
-    else {
-        // an error occurred
-        msg = "Error: " + worker->error_str;
+    if (worker->error_type == QNetworkReply::NoError)
+    {
+        message = "Success - Response: " + worker->response;    // komunikacja powiodła się
+
+    }else{
+
+        message = "Error: " + worker->error_str;    // wystąpił błąd
     }
 
-    int j = 0;
+    int firstCountryLetterIndex = 0;
+    int firstRecordLetterIndex = 0;
+    int lastRecordLetterIndex = 0;
+    QString planeRecordData = "";
 
-    while ((j = msg.indexOf(match, j)) != -1)
+    while ((firstCountryLetterIndex = message.indexOf(match, firstCountryLetterIndex)) != -1)
     {
         count++;
-        qDebug() << "Found Poland tag at index position" << j;
+        qDebug() << "Found Poland tag at index position" << firstCountryLetterIndex;
 
-        for(int i=0;i<=5;i++)
-        {
-            qDebug() << msg[j+i];
-        }
-        ++j;
+        firstRecordLetterIndex = searchForBeginning(firstCountryLetterIndex, message);
+        qDebug() << "Record begin: " << firstRecordLetterIndex;
+        lastRecordLetterIndex = searchForEnd(firstCountryLetterIndex, message);
+        qDebug() << "Record finish: " << lastRecordLetterIndex;
+        planeRecordData = selectRecord(firstRecordLetterIndex, lastRecordLetterIndex, message);
+        qDebug() << "Record: " << planeRecordData;
+
+//        for(int i=0; i<=5; i++)
+//        {
+//            qDebug() << message[firstCountryLetterIndex + i];
+//        }
+
+        ++firstCountryLetterIndex;
 
     }
 
     qDebug() << "Number of Poland tag at mesage" << count;          // początek informajci o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
     //QMessageBox::information(this, "", msg);
 }
+
+
+/*!
+ * \brief MainWindow::takeScreen() - funkcja szukająca poczatku rekordu
+ */
+
+int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
+{
+    int tempLetterIndex = firstCountryLetterIndex;
+
+    do
+    {
+        tempLetterIndex--;
+
+    }while(message[tempLetterIndex] != '[');
+
+    return tempLetterIndex;
+}
+
+/*!
+ * \brief MainWindow::searchForEnd() - funkcja szukająca końca rekordu
+ */
+
+int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
+{
+    int tempLetterIndex = firstCountryLetterIndex;
+
+    do
+    {
+        tempLetterIndex++;
+
+    }while(message[tempLetterIndex] != ']');
+
+    return tempLetterIndex;
+}
+
+/*!
+ * \brief MainWindow::selectRecord() - funkcja zwracająca rekord
+ */
+
+QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message)
+{
+    QString recordBuffer = "";
+
+    for(int i = firstRecordLetterIndex; i <= lastRecordLetterIndex; i++)
+    {
+        recordBuffer += message[i];
+    }
+
+    return recordBuffer;
+}
+
+
 
 /*!
  * \brief MainWindow::takeScreen() - funkcja wykonująca zrzut całego okna aplikcji
