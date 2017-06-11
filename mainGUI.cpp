@@ -1,34 +1,58 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "mainGUI.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainGUI::MainGUI(QWidget *parent) :
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
     worker = new HttpRequestWorker(this);
+    this->setGeometry(0,0,600,400);
+
+    _mainWidget = new QWidget;
+    _mainLayout = new QHBoxLayout;
+    _tabela = new QTableView;
+    _tabela->setGeometry(0,0,391,251);
+
+    _mainLayout->addWidget(_tabela);
+    _mainWidget->setLayout(_mainLayout);
+    this->setCentralWidget(_mainWidget);
+    this->setWindowTitle("Nowe GUI projektu");
+
+    _menuBar = new QMenuBar;
+    _mainManu = new QMenu;
+    _helpManu = new QMenu;
+    actionUpdate =_mainManu->addAction("Aktualizuj");
+    actionSaveWindow = _mainManu->addAction("Zapisz zrzut ekranu");
+    actionMinimized = _mainManu->addAction("Minimalizuj");
+    actionExite = _mainManu->addAction("Wyjscie");
+    actionAboutApp = _helpManu->addAction("O programie");
+    actionAboutQt = _helpManu->addAction("O Qt");
+    _mainManu->setTitle("Pilk");
+    _helpManu->setTitle("Pomoc");
+    _helpManu->setToolTip("Menu zawierajace informacie o projekcie i innych szczegolach technicznych");
+    _menuBar->addMenu(_mainManu);
+    _menuBar->addMenu(_helpManu);
+    this->setMenuBar(_menuBar);
+
     setConnections();
 }
 
-MainWindow::~MainWindow()
+MainGUI::~MainGUI()
 {
-    delete ui;
     delete worker;
 }
 
-void MainWindow::setConnections()
+void MainGUI::setConnections()
 {
-    connect(ui->actionUpdate, SIGNAL(triggered()),                // połączenie przycisku z menu z metodą aktualizuj dane
+    connect(this->actionUpdate, SIGNAL(triggered()),                // połączenie przycisku z menu z metodą aktualizuj dane
             this, SLOT(updateData()));
-    connect(ui->actionExit, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą zamykajacą aplikację
+    connect(this->actionExite, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą zamykajacą aplikację
             this, SLOT(close()));
-    connect(ui->actionSaveWindow, SIGNAL(triggered()),          // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
+    connect(this->actionSaveWindow, SIGNAL(triggered()),          // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
             this, SLOT(takeScreen()));
-    connect(ui->actionAboutApp, SIGNAL(triggered()),            // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
+    connect(this->actionAboutApp, SIGNAL(triggered()),            // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
             this, SLOT(aboutApp()));
-    connect(ui->actionAboutQt, SIGNAL(triggered()),             // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
-            qApp, SLOT(aboutQt()));
-    connect(ui->actionMinimize, SIGNAL(triggered()),
+    //connect(this->actionAboutQt, SIGNAL(triggered()),             // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
+    //        qApp, SLOT(aboutQt()));
+    connect(this->actionMinimized, SIGNAL(triggered()),
             this, SLOT(showMinimized()));
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),
             this, SLOT(handle_result()));
@@ -38,7 +62,7 @@ void MainWindow::setConnections()
  * \brief MainWindow::updateData() - funkcja wykonująca zapytanie GET
  */
 
-void MainWindow::updateData()
+void MainGUI::updateData()
 {
     QString url_str = "https://opensky-network.org/api/states/all";
 
@@ -57,7 +81,7 @@ void MainWindow::updateData()
  *  - worker - wskaźnik na połączenie
  */
 
-void MainWindow::handle_result() {
+void MainGUI::handle_result() {
     QString msg;
     QString match = QString("Poland");
     int count = 0;
@@ -94,7 +118,7 @@ void MainWindow::handle_result() {
  * \brief MainWindow::takeScreen() - funkcja wykonująca zrzut całego okna aplikcji
  */
 
-void MainWindow::takeScreen()
+void MainGUI::takeScreen()
 {
     image = QPixmap::grabWidget(this);                                        // sposób nr1 - tylko widget(nie widzi VTKWidget ;/ )
     //image = QPixmap::grabWindow(QApplication::desktop()->winId())             // sposób nr2 - cały pulpit
@@ -108,7 +132,7 @@ void MainWindow::takeScreen()
  * użytkownika.
  */
 
-void MainWindow::saveScreen()
+void MainGUI::saveScreen()
 {
     QString format = "png";
     QString initialPath = QDir::currentPath() + tr("/untitled.") + format;
@@ -126,7 +150,7 @@ void MainWindow::saveScreen()
  * \brief MainWindow::aboutApp() - funkcja wyświetlająca okno "O aplikacji"
  */
 
-void MainWindow::aboutApp()
+void MainGUI::aboutApp()
 {
     QMessageBox mssgbox;
     QString info;
