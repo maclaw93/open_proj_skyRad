@@ -86,6 +86,7 @@ void MainWindow::handle_result()
     int firstRecordLetterIndex = 0;
     int lastRecordLetterIndex = 0;
     QString planeRecordData = "";
+    QList <plane> planesObjects;
 
     while ((firstCountryLetterIndex = message.indexOf(match, firstCountryLetterIndex)) != -1)
     {
@@ -99,19 +100,51 @@ void MainWindow::handle_result()
         planeRecordData = selectRecord(firstRecordLetterIndex, lastRecordLetterIndex, message);
         qDebug() << "Record: " << planeRecordData;
 
-//        for(int i=0; i<=5; i++)
-//        {
-//            qDebug() << message[firstCountryLetterIndex + i];
-//        }
+        parsingData(planeRecordData);
+        //planesObjects.push_back(parsingData(planeRecordData));
 
         ++firstCountryLetterIndex;
 
     }
 
-    qDebug() << "Number of Poland tag at mesage" << count;          // początek informajci o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
+    qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
     //QMessageBox::information(this, "", msg);
 }
 
+/*!
+ * \brief MainWindow::parsingData(QString planeRecordData) - funkcja do parsowania danych tekstowych oraz tworzenia obiektów klasy plane
+ *
+ * - planeRecordData - dane typu QString z informacjami o samolocie
+ *
+ */
+
+void MainWindow::parsingData(QString planeRecordData)
+{
+    QString planeData [18], tempData;
+    int indexPlaneData = 0;
+
+
+    for (int i = 0; i <= planeRecordData.size(); i++)
+    {
+
+        if ((planeRecordData[i] == ',') || (planeRecordData[i] == ']'))
+        {
+            planeData[indexPlaneData] = tempData;
+            qDebug() << tempData;
+            tempData = "";
+            indexPlaneData++;
+        }
+
+        if ((planeRecordData[i] != ' ') && (planeRecordData[i] != '"') && planeRecordData[i] != ',' && (planeRecordData[i] != '[') && (planeRecordData[i] != ']'))
+        {
+            tempData += planeRecordData[i];
+        }
+
+        //["4891a6","ENT582  ","Poland",1497533490,1497533490,7.2239,53.5819,10972.8,false,197.6,219.82,0,null,11193.78,null,false,false,0]
+    }
+
+    //return &Plane;
+}
 
 /*!
  * \brief MainWindow::takeScreen() - funkcja szukająca poczatku rekordu

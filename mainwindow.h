@@ -11,6 +11,8 @@
 #include <QDesktopWidget>
 
 #include "httprequestworker.h"
+#include "plane.h"
+#include <QList>
 #include <QDebug>
 
 namespace Ui {
@@ -33,9 +35,10 @@ private:
     QPixmap image;                              ///< zmienna zapamiętująca obraz
     HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
 
-    int searchForBeginning(int firstCountryLetterIndex, QString message);                             ///< metoda szukająca poczatku rekordu
-    int searchForEnd(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca końca rekordu
-    QString selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message);          ///< metoda zwracająca rekord
+    int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
+    int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
+    QString selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message);           ///< metoda zwracająca rekord
+    void parsingData(QString planeRecordData);                                                             ///< metoda zwracająca obiekt klasy plane
 
 private slots:
     void updateData();                          ///< metoda aktualizujaca dane o samolotach
