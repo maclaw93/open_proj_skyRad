@@ -1,6 +1,6 @@
 #include "plane.h"
 
-plane::plane(QString icao24, QString callsign, QString originCountry, float timePosition, float timeVelocity, float longitude, float latitude, float altitude, bool onGround, float velocity, float heading, float verticalRate, int sensors,)
+plane::plane(QString icao24, QString callsign, QString originCountry, float timePosition, float timeVelocity, float longitude, float latitude, float altitude, bool onGround, float velocity, float heading, float verticalRate, int sensors)
 {
 
     this->icao24 = icao24;

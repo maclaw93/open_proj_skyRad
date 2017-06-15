@@ -6,7 +6,7 @@
 class plane
 {
 public:
-    plane();
+    plane(QString icao24, QString callsign, QString originCountry, float timePosition, float timeVelocity, float longitude, float latitude, float altitude, bool onGround, float velocity, float heading, float verticalRate, int sensors);
 
 
     QString getIcao24() const;
