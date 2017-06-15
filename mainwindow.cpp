@@ -14,10 +14,12 @@ MainWindow::MainWindow(QWidget *parent) :
  * \brief MainWindow::~MainWindow() - funkcja zawierająca destruktory
  */
 
-MainWindow::~MainWindow()
+Main+Window::~MainWindow()
 {
     delete ui;
-    delete worker;
+    delete wor
+
+            ker;
 }
 
 /*!
@@ -29,7 +31,7 @@ void MainWindow::setConnections()
     connect(ui->actionUpdate, SIGNAL(triggered()),                      // połączenie przycisku z menu z metodą aktualizuj dane
             this, SLOT(updateData()));
     connect(ui->actionExit, SIGNAL(triggered()),                        // połączenie przycisku z menu z metodą zamykajacą aplikację
-            this, SLOT(close()));
+ dfsgfsbd           this, SLOT(close()));
     connect(ui->actionSaveWindow, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
             this, SLOT(takeScreen()));
     connect(ui->actionAboutApp, SIGNAL(triggered()),                    // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
@@ -62,7 +64,9 @@ void MainWindow::updateData()
 
 /*!
  * \brief MainWindow::handle_result(HttpRequestWorker *worker) - funkcja wyłapuje odpowiedź
- *  - worker - wskaźnik na połączenie
+ *
+ *
+ * - worker - wskaźnik na połączenie
  */
 
 void MainWindow::handle_result()
