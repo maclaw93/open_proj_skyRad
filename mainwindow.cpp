@@ -8,6 +8,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     worker = new HttpRequestWorker(this);
     setConnections();
+
+    model = new QStandardItemModel(1,1,this);
+    model->setHorizontalHeaderItem(0, new QStandardItem(QString("Icao24")));
+    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Callsign")));
+    model->setHorizontalHeaderItem(2, new QStandardItem(QString("Origin Country")));
+    model->setHorizontalHeaderItem(3, new QStandardItem(QString("Time Position")));
+    model->setHorizontalHeaderItem(4, new QStandardItem(QString("Time Velocity")));
+    model->setHorizontalHeaderItem(5, new QStandardItem(QString("Longitude")));
+    model->setHorizontalHeaderItem(6, new QStandardItem(QString("Latitude")));
+    model->setHorizontalHeaderItem(7, new QStandardItem(QString("Altitude")));
+    model->setHorizontalHeaderItem(8, new QStandardItem(QString("On Ground")));
+    model->setHorizontalHeaderItem(9, new QStandardItem(QString("Velocity")));
+    model->setHorizontalHeaderItem(10, new QStandardItem(QString("Heading")));
+    model->setHorizontalHeaderItem(11, new QStandardItem(QString("Vertical Rate")));
+    model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
+
+    ui->tableView->setModel(model);
 }
 
 /*!
@@ -110,6 +127,45 @@ void MainWindow::handle_result()
 
     for (int i = 0; i < planesObjects.size(); i++)
     {
+        QStandardItem *row0 = new QStandardItem(planesObjects[i]->getIcao24());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 0, row0);
+
+        QStandardItem *row1 = new QStandardItem(planesObjects[i]->getCallsign());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 1, row1);
+
+        QStandardItem *row2 = new QStandardItem(planesObjects[i]->getOriginCountry());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 2, row2);
+
+        QStandardItem *row3 = new QStandardItem(QString::number(planesObjects[i]->getTimePosition()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 3, row3);
+
+        QStandardItem *row4 = new QStandardItem(QString::number(planesObjects[i]->getTimeVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 4, row4);
+
+        QStandardItem *row5 = new QStandardItem(QString::number(planesObjects[i]->getLongitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 5, row5);
+
+        QStandardItem *row6 = new QStandardItem(QString::number(planesObjects[i]->getLatitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 6, row6);
+
+        QStandardItem *row7 = new QStandardItem(QString::number(planesObjects[i]->getAltitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 7, row7);
+
+        QStandardItem *row8 = new QStandardItem(QString::number(planesObjects[i]->getOnGround()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 8, row8);
+
+        QStandardItem *row9 = new QStandardItem(QString::number(planesObjects[i]->getVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 9, row9);
+
+        QStandardItem *row10 = new QStandardItem(QString::number(planesObjects[i]->getHeading()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 10, row10);
+
+        QStandardItem *row11 = new QStandardItem(QString::number(planesObjects[i]->getVerticalRate()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 11, row11);
+
+        QStandardItem *row12 = new QStandardItem(QString::number(planesObjects[i]->getSensors()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 12, row12);
+
         qDebug() << "Plane: " << i;
         qDebug() << "icao24: " << planesObjects[i]->getIcao24();
         qDebug() << "callsign: " << planesObjects[i]->getCallsign();
@@ -126,6 +182,7 @@ void MainWindow::handle_result()
         qDebug() << "sensors: " << planesObjects[i]->getSensors();
         qDebug() << "-------------------------------------------";
     }
+    ui->tableView->setModel(model);
 
     qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
 

@@ -13,6 +13,10 @@
 #include "httprequestworker.h"
 #include "plane.h"
 #include <QList>
+
+#include <QTableView>
+#include <QStandardItemModel>
+
 #include <QDebug>
 
 namespace Ui {
@@ -34,6 +38,7 @@ private:
     Ui::MainWindow *ui;                         ///< wyklikany interfejs użytkownika
     QPixmap image;                              ///< zmienna zapamiętująca obraz
     HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
+    QStandardItemModel *model;                  ///< wskaźnik na model
 
     int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
     int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
