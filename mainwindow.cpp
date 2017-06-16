@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 /*!
- * \brief MainWindow::~MainWindow() - funkcja zawierająca destruktory
+ * \brief MainWindow::~MainWindow() - destruktory
  */
 
 MainWindow::~MainWindow()
@@ -169,6 +169,13 @@ plane MainWindow::parsingData(QString planeRecordData)
     return Plane;
 
 }
+
+/*!
+ * \brief MainWindow::toBoolean(QString textToCheck) - funkcja do konwersji zmiennej tekstowej na boolean
+ *
+ * - textToCheck - dane typu QString do przekonwertowania
+ *
+ */
 
 bool MainWindow::toBoolean(QString textToCheck)
 {
