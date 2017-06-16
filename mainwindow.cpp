@@ -86,7 +86,7 @@ void MainWindow::handle_result()
     int firstRecordLetterIndex = 0;
     int lastRecordLetterIndex = 0;
     QString planeRecordData = "";
-    QList <plane> planesObjects;
+    QList <plane*> planesObjects;
 
     while ((firstCountryLetterIndex = message.indexOf(match, firstCountryLetterIndex)) != -1)
     {
@@ -111,19 +111,19 @@ void MainWindow::handle_result()
     for (int i = 0; i < planesObjects.size(); i++)
     {
         qDebug() << "Plane: " << i;
-        qDebug() << "icao24: " << planesObjects[i].getIcao24();
-        qDebug() << "callsign: " << planesObjects[i].getCallsign();
-        qDebug() << "originCountry: " << planesObjects[i].getOriginCountry();
-        qDebug() << "timePosition: " << planesObjects[i].getTimePosition();
-        qDebug() << "timeVelocity: " << planesObjects[i].getTimeVelocity();
-        qDebug() << "longitude: " << planesObjects[i].getLongitude();
-        qDebug() << "latitude: " << planesObjects[i].getLatitude();
-        qDebug() << "altitude: " << planesObjects[i].getAltitude();
-        qDebug() << "onGround: " << planesObjects[i].getOnGround();
-        qDebug() << "velocity: " << planesObjects[i].getVelocity();
-        qDebug() << "heading: " << planesObjects[i].getHeading();
-        qDebug() << "verticalRate: " << planesObjects[i].getVerticalRate();
-        qDebug() << "sensors: " << planesObjects[i].getSensors();
+        qDebug() << "icao24: " << planesObjects[i]->getIcao24();
+        qDebug() << "callsign: " << planesObjects[i]->getCallsign();
+        qDebug() << "originCountry: " << planesObjects[i]->getOriginCountry();
+        qDebug() << "timePosition: " << planesObjects[i]->getTimePosition();
+        qDebug() << "timeVelocity: " << planesObjects[i]->getTimeVelocity();
+        qDebug() << "longitude: " << planesObjects[i]->getLongitude();
+        qDebug() << "latitude: " << planesObjects[i]->getLatitude();
+        qDebug() << "altitude: " << planesObjects[i]->getAltitude();
+        qDebug() << "onGround: " << planesObjects[i]->getOnGround();
+        qDebug() << "velocity: " << planesObjects[i]->getVelocity();
+        qDebug() << "heading: " << planesObjects[i]->getHeading();
+        qDebug() << "verticalRate: " << planesObjects[i]->getVerticalRate();
+        qDebug() << "sensors: " << planesObjects[i]->getSensors();
         qDebug() << "-------------------------------------------";
     }
 
@@ -138,7 +138,7 @@ void MainWindow::handle_result()
  *
  */
 
-plane MainWindow::parsingData(QString planeRecordData)
+plane* MainWindow::parsingData(QString planeRecordData)
 {
     QString planeData [18], tempData;
     int indexPlaneData = 0;
@@ -161,10 +161,10 @@ plane MainWindow::parsingData(QString planeRecordData)
         //["4891a6","ENT582  ","Poland",1497533490,1497533490,7.2239,53.5819,10972.8,false,197.6,219.82,0,null,11193.78,null,false,false,0]
     }
 
-    plane Plane(planeData[0], planeData[1], planeData[2], planeData[3].toFloat(),
-                planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
-                planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
-                planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
+    plane* Plane = new plane(planeData[0], planeData[1], planeData[2], planeData[3].toFloat(),
+                    planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
+                    planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
+                    planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
 
     return Plane;
 

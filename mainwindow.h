@@ -38,7 +38,7 @@ private:
     int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
     int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
     QString selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message);           ///< metoda zwracająca rekord
-    plane parsingData(QString planeRecordData);                                                             ///< metoda zwracająca obiekt klasy plane
+    plane* parsingData(QString planeRecordData);                                                             ///< metoda zwracająca obiekt klasy plane
     bool toBoolean(QString);
 
 private slots:
