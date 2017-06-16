@@ -100,15 +100,35 @@ void MainWindow::handle_result()
         planeRecordData = selectRecord(firstRecordLetterIndex, lastRecordLetterIndex, message);
         qDebug() << "Record: " << planeRecordData;
 
-        parsingData(planeRecordData);
-        //planesObjects.push_back(parsingData(planeRecordData));
+        planesObjects.push_back(parsingData(planeRecordData));
 
         ++firstCountryLetterIndex;
 
     }
 
+    qDebug() << "Amount of elements in QList: " << planesObjects.size();
+
+    for (int i = 0; i < planesObjects.size(); i++)
+    {
+        qDebug() << "Plane: " << i;
+        qDebug() << "icao24: " << planesObjects[i].getIcao24();
+        qDebug() << "callsign: " << planesObjects[i].getCallsign();
+        qDebug() << "originCountry: " << planesObjects[i].getOriginCountry();
+        qDebug() << "timePosition: " << planesObjects[i].getTimePosition();
+        qDebug() << "timeVelocity: " << planesObjects[i].getTimeVelocity();
+        qDebug() << "longitude: " << planesObjects[i].getLongitude();
+        qDebug() << "latitude: " << planesObjects[i].getLatitude();
+        qDebug() << "altitude: " << planesObjects[i].getAltitude();
+        qDebug() << "onGround: " << planesObjects[i].getOnGround();
+        qDebug() << "velocity: " << planesObjects[i].getVelocity();
+        qDebug() << "heading: " << planesObjects[i].getHeading();
+        qDebug() << "verticalRate: " << planesObjects[i].getVerticalRate();
+        qDebug() << "sensors: " << planesObjects[i].getSensors();
+        qDebug() << "-------------------------------------------";
+    }
+
     qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
-    //QMessageBox::information(this, "", msg);
+
 }
 
 /*!
@@ -118,11 +138,10 @@ void MainWindow::handle_result()
  *
  */
 
-void MainWindow::parsingData(QString planeRecordData)
+plane MainWindow::parsingData(QString planeRecordData)
 {
     QString planeData [18], tempData;
     int indexPlaneData = 0;
-
 
     for (int i = 0; i <= planeRecordData.size(); i++)
     {
@@ -130,7 +149,7 @@ void MainWindow::parsingData(QString planeRecordData)
         if ((planeRecordData[i] == ',') || (planeRecordData[i] == ']'))
         {
             planeData[indexPlaneData] = tempData;
-            qDebug() << tempData;
+//            qDebug() << tempData;
             tempData = "";
             indexPlaneData++;
         }
@@ -139,12 +158,30 @@ void MainWindow::parsingData(QString planeRecordData)
         {
             tempData += planeRecordData[i];
         }
-
         //["4891a6","ENT582  ","Poland",1497533490,1497533490,7.2239,53.5819,10972.8,false,197.6,219.82,0,null,11193.78,null,false,false,0]
     }
 
-    //return &Plane;
+    plane Plane(planeData[0], planeData[1], planeData[2], planeData[3].toFloat(),
+                planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
+                planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
+                planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
+
+    return Plane;
+
 }
+
+bool MainWindow::toBoolean(QString textToCheck)
+{
+    if ((textToCheck == "true") || (textToCheck == "TRUE") || (textToCheck == "1"))
+    {
+        return true;
+
+    }else{
+
+        return false;
+    }
+}
+
 
 /*!
  * \brief MainWindow::takeScreen() - funkcja szukająca poczatku rekordu

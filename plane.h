@@ -6,7 +6,9 @@
 class plane
 {
 public:
-    plane(QString icao24, QString callsign, QString originCountry, float timePosition, float timeVelocity, float longitude, float latitude, float altitude, bool onGround, float velocity, float heading, float verticalRate, int sensors);
+    plane(QString icao24, QString callsign, QString originCountry, float timePosition,
+          float timeVelocity, float longitude, float latitude, float altitude, bool onGround,
+          float velocity, float heading, float verticalRate, int sensors);
 
 
     QString getIcao24() const;
@@ -27,6 +29,9 @@ public:
     float getLongitude() const;
     void setLongitude(float value);
 
+    float getLatitude() const;
+    void setLatitude(float value);
+
     float getAltitude() const;
     void setAltitude(float value);
 
@@ -45,6 +50,7 @@ public:
     int getSensors() const;
     void setSensors(int value);
 
+
 private:
     QString icao24;
     QString callsign;
@@ -59,6 +65,7 @@ private:
     float heading;
     float verticalRate;
     int sensors;
+
 };
 
 #endif // PLANE_H
