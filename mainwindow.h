@@ -11,6 +11,8 @@
 #include <QDesktopWidget>
 
 #include "httprequestworker.h"
+#include "plane.h"
+#include <QList>
 #include <QDebug>
 
 namespace Ui {
@@ -29,13 +31,19 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
-    QPixmap image;                              ///<zmienna zapamiętująca obraz
-    HttpRequestWorker *worker;
+    Ui::MainWindow *ui;                         ///< wyklikany interfejs użytkownika
+    QPixmap image;                              ///< zmienna zapamiętująca obraz
+    HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
+
+    int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
+    int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
+    QString selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message);           ///< metoda zwracająca rekord
+    plane* parsingData(QString planeRecordData);                                                             ///< metoda zwracająca obiekt klasy plane
+    bool toBoolean(QString);
 
 private slots:
-    void updateData();
-    void handle_result();
+    void updateData();                          ///< metoda aktualizujaca dane o samolotach
+    void handle_result();                       ///< metoda przyjmująca odebrane dane
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
