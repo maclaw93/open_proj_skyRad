@@ -4,17 +4,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     worker = new HttpRequestWorker(this);
-    //this->setGeometry(0,0,600,400);
+    this->setGeometry(0,0,600,400);
 
     //glowny panel GUI
     _mainWidget = new QWidget(this);
-    _mainLayout = new QHBoxLayout(this);
+    _mainLayout = new QGridLayout(this);
 
     //elementy na glownym panelu
     _leftPart = new QGroupBox(this);
     _leftPartLayout = new QVBoxLayout;
     _tabela = new QTableView(this);
-    //_tabela->setGeometry(0,0,800,400);
 
     //Timerowe rzeczy
     _timerGroup = new QGroupBox(_leftPart);
@@ -33,7 +32,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //wnętrze Gui od Timera
     //pierwsza linia
     _timeText->setText("Wybierz czas odswierzania w sek");
-    _timeText->setFont(QFont("arial",10,2,true));
     //druga linia
     _timeSlider->setOrientation(Qt::Horizontal);
     _timeSlider->setRange(5,60);
@@ -45,10 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
     _timeDispLayout->addWidget(_timeText2);
     _timeDispLayout->addWidget(_timeInd);
     _displTimeGroup->setLayout(_timeDispLayout);
-    _displTimeGroup->setFlat(true);
+    _displTimeGroup->setStyleSheet("border:0; margin: 0px 0px 0px;");
+
     //piąta linia
     _timeText3->setText("Licznik Timera [sek]:");
     _timerInd->setNum(0.0);
+    _timerInd->setAlignment(Qt::AlignHCenter);
 
     //ulorzenie rzeczy od timera
     _timerSetLayout = new QVBoxLayout;
@@ -63,15 +63,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ///ulorzenie calego centaralnego GUI
     _timerGroup->setLayout(_timerSetLayout);
-    _timerGroup->setFlat(false);
     _timerGroup->setTitle("Timer");
     _timerGroup->setStyleSheet("QGroupBox { border: 1px solid grey; border-radius: 9px; margin-top: 0.5em;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 0px 0 0px;}");
     _leftPartLayout->addWidget(_timerGroup);
     _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //to powoduje ze zostaje tej samej wielkosci ta grupa
-    //_leftPart->setFlat(true);
     _leftPart->setLayout(_leftPartLayout);
-    _mainLayout->addWidget(_tabela);
-    _mainLayout->addWidget(_leftPart);
+    _leftPart->setStyleSheet("margin: 0px 0px 0px;");
+    _mainLayout->addWidget(_tabela,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
+    _mainLayout->addWidget(_leftPart,0,1); //"lewa część" ma być ulokowana w komórce (0,1)
     _mainWidget->setLayout(_mainLayout);
     this->setCentralWidget(_mainWidget);
     this->setWindowTitle("Nowe GUI projektu");
@@ -82,13 +81,13 @@ MainWindow::MainWindow(QWidget *parent) :
     _helpManu = new QMenu;
     //stoworzenie opcji z belki menu
     actionUpdate =_mainManu->addAction("Aktualizuj");
+    actionUpdate->setToolTip("Pobieranie danych i ich parsowanie");
     actionSaveWindow = _mainManu->addAction("Zapisz zrzut ekranu");
     actionMinimized = _mainManu->addAction("Minimalizuj");
     actionExite = _mainManu->addAction("Wyjscie");
     actionAboutApp = _helpManu->addAction("O programie");
     _mainManu->setTitle("Pilk");
     _helpManu->setTitle("Pomoc");
-    _helpManu->setToolTip("Menu zawierajace informacie o projekcie i innych szczegolach technicznych");
     _menuBar->addMenu(_mainManu);
     _menuBar->addMenu(_helpManu);
     this->setMenuBar(_menuBar);
@@ -112,21 +111,22 @@ void MainWindow::setConnections()
             this, SLOT(takeScreen()));
     connect(this->actionAboutApp, SIGNAL(triggered()),            // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
             this, SLOT(aboutApp()));
-    //connect(this->actionAboutQt, SIGNAL(triggered()),             // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
-    //        qApp, SLOT(aboutQt()));
     connect(this->actionMinimized, SIGNAL(triggered()),
             this, SLOT(showMinimized()));
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),
             this, SLOT(handle_result()));
     connect(this->_timeSlider, SIGNAL(valueChanged(int)),
             this->_timeInd, SLOT(setNum(int)));
-    connect(this->_timeSlider, SIGNAL(sliderReleased()),
-            this, SLOT(prepareTimer()));
+    connect(this->_timeSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(prepareTimer(int)));
 }
 
-void MainWindow::prepareTimer()
+/*!
+ * \brief MainWindow::prepareTimer(int timerPeriod) - funkcja nastawiająca interwał Timer'a
+ *  - timerPeriod - wielkość ustawionego okresu w sekundach
+ */
+void MainWindow::prepareTimer(int timerPeriod)
 {
-    int timerPeriod = this->_timeSlider->value();
     this->_timer->setInterval(timerPeriod*1000);
     qDebug() << "Timer set to " << timerPeriod;
     qDebug() << "Timer redy to go!!";

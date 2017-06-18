@@ -10,6 +10,7 @@
 #include <QToolBar>
 #include <QStatusBar>
 #include <QVBoxLayout>
+#include <QGridLayout>
 #include <QGroupBox>
 #include <QPushButton>
 #include <QLabel>
@@ -44,7 +45,7 @@ private:
 
     //wskazniki od wytworzenia okienka
     QWidget* _mainWidget;
-    QHBoxLayout* _mainLayout;
+    QGridLayout* _mainLayout;
     QMenuBar* _menuBar;
     QMenu* _mainManu;
     QMenu* _helpManu;
@@ -83,7 +84,7 @@ private slots:
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
-    void prepareTimer();
+    void prepareTimer(int timerPeriod);
 
 };
 
