@@ -1,11 +1,12 @@
-#include "mainGUI.h"
+#include "mainwindow.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainGUI ww;
+    //a.setStyle("Fusion");
+    MainWindow ww;
     ww.show();
     //ww.showFullScreen();
 

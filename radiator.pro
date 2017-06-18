@@ -15,7 +15,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     httprequestworker.cpp \
-    mainGUI.cpp
+    mainwindow.cpp
 
-HEADERS  += mainGUI.h \
-    httprequestworker.h
+HEADERS  += \
+    httprequestworker.h \
+    mainwindow.h

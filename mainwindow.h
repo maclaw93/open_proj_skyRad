@@ -1,5 +1,5 @@
-#ifndef MAINGUI_H
-#define MAINGUI_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QWidget>
@@ -9,7 +9,13 @@
 #include <QHBoxLayout>
 #include <QToolBar>
 #include <QStatusBar>
+#include <QVBoxLayout>
+#include <QGroupBox>
+#include <QPushButton>
+#include <QLabel>
+#include <QSlider>
 
+#include <QTimer>
 #include <QtNetwork/QNetworkReply>
 #include <QMessageBox>
 
@@ -21,7 +27,7 @@
 #include "httprequestworker.h"
 #include <QDebug>
 
-class MainGUI : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -29,8 +35,8 @@ protected:
     void setConnections();                      ///< metoda do inicjalizacji połoczeń SIGNAL-SLOT
 
 public:
-    MainGUI(QWidget *parent = 0);
-    ~MainGUI();
+    MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 
 private:
     QPixmap image;                              ///<zmienna zapamiętująca obraz
@@ -47,6 +53,20 @@ private:
 
     //elementy GUI
     QTableView* _tabela;
+    QGroupBox* _leftPart;
+    QVBoxLayout* _leftPartLayout;
+    QGroupBox* _timerGroup;
+    QGroupBox* _displTimeGroup;
+    QHBoxLayout* _timeDispLayout;
+    QLabel* _timeText;
+    QLabel* _timeText2;
+    QLabel* _timeText3;
+    QLabel* _timerInd;
+    QLabel* _timeInd;
+    QVBoxLayout* _timerSetLayout;
+    QPushButton* _acceptTimeButton;
+    QSlider* _timeSlider;
+    QTimer* _timer;
 
 protected:
     QAction* actionUpdate;
@@ -54,7 +74,7 @@ protected:
     QAction* actionSaveWindow;
     QAction* actionAboutApp;
     QAction* actionMinimized;
-    QAction* actionAboutQt;
+    //QAction* actionAboutQt;
 
 
 private slots:
@@ -63,7 +83,8 @@ private slots:
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
+    void prepareTimer();
 
 };
 
-#endif // MAINGUI_H
+#endif // MAINWINDOW_H
