@@ -1,12 +1,97 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent)
 {
-    ui->setupUi(this);
     worker = new HttpRequestWorker(this);
+    this->setGeometry(0,0,600,400);
+
+    //glowny panel GUI
+    _mainWidget = new QWidget(this);
+    _mainLayout = new QGridLayout(this);
+
+    //elementy na glownym panelu
+    _leftPart = new QGroupBox(this);
+    _leftPartLayout = new QVBoxLayout;
+    _tabele = new QTableView(this);
+
+    //Timerowe rzeczy
+    _timerGroup = new QGroupBox(_leftPart);
+    _displTimeGroup = new QGroupBox(_timerGroup);
+    _timeDispLayout = new QHBoxLayout;
+    _timeInd = new QLabel;
+    _timeText = new QLabel;
+    _timeText2 = new QLabel;
+    _timeText3 = new QLabel;
+    _timerInd = new QLabel;
+    _timer = new QTimer;
+    _timeSlider = new QSlider;
+    _acceptTimeButton = new QPushButton("START TIMER!!!");
+    _acceptTimeButton->setDisabled(true);
+
+    //wnętrze Gui od Timera
+    //pierwsza linia
+    _timeText->setText("Wybierz czas odswierzania w sek");
+    //druga linia
+    _timeSlider->setOrientation(Qt::Horizontal);
+    _timeSlider->setRange(5,60);
+    _timeSlider->setSingleStep(10);
+    _timeSlider->setSliderPosition(10);
+    //trzecia linia
+    _timeInd->setNum(10);
+    _timeText2->setText("Interwal odswierzania [sek]: ");
+    _timeDispLayout->addWidget(_timeText2);
+    _timeDispLayout->addWidget(_timeInd);
+    _displTimeGroup->setLayout(_timeDispLayout);
+    _displTimeGroup->setStyleSheet("border:0; margin: 0px 0px 0px;");
+
+    //piąta linia
+    _timeText3->setText("Licznik Timera [sek]:");
+    _timerInd->setNum(0.0);
+    _timerInd->setAlignment(Qt::AlignHCenter);
+
+    //ulorzenie rzeczy od timera
+    _timerSetLayout = new QVBoxLayout;
+    _timerSetLayout->setAlignment(Qt::AlignHCenter);
+    _timerSetLayout->addWidget(_timeText);
+    _timerSetLayout->addWidget(_timeSlider);
+    _timerSetLayout->addWidget(_displTimeGroup);
+    _timerSetLayout->addWidget(_acceptTimeButton);
+    _timerSetLayout->addWidget(_timeText3);
+    _timerSetLayout->addWidget(_timerInd);
+    _timerSetLayout->setSizeConstraint(QLayout::SetFixedSize);
+
+    ///ulorzenie calego centaralnego GUI
+    _timerGroup->setLayout(_timerSetLayout);
+    _timerGroup->setTitle("Timer");
+    _timerGroup->setStyleSheet("QGroupBox { border: 1px solid grey; border-radius: 9px; margin-top: 0.5em;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 0px 0 0px;}");
+    _leftPartLayout->addWidget(_timerGroup);
+    _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //to powoduje ze zostaje tej samej wielkosci ta grupa
+    _leftPart->setLayout(_leftPartLayout);
+    _leftPart->setStyleSheet("margin: 0px 0px 0px;");
+    _mainLayout->addWidget(_tabele,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
+    _mainLayout->addWidget(_leftPart,0,1); //"lewa część" ma być ulokowana w komórce (0,1)
+    _mainWidget->setLayout(_mainLayout);
+    this->setCentralWidget(_mainWidget);
+    this->setWindowTitle("Nowe GUI projektu");
+
+    //belka menu
+    _menuBar = new QMenuBar;
+    _mainManu = new QMenu;
+    _helpManu = new QMenu;
+    //stoworzenie opcji z belki menu
+    actionUpdate =_mainManu->addAction("Aktualizuj");
+    actionUpdate->setToolTip("Pobieranie danych i ich parsowanie");
+    actionSaveWindow = _mainManu->addAction("Zapisz zrzut ekranu");
+    actionMinimized = _mainManu->addAction("Minimalizuj");
+    actionExite = _mainManu->addAction("Wyjscie");
+    actionAboutApp = _helpManu->addAction("O programie");
+    _mainManu->setTitle("Pilk");
+    _helpManu->setTitle("Pomoc");
+    _menuBar->addMenu(_mainManu);
+    _menuBar->addMenu(_helpManu);
+    this->setMenuBar(_menuBar);
+
     setConnections();
 
     model = new QStandardItemModel(1,1,this);
@@ -24,7 +109,7 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setHorizontalHeaderItem(11, new QStandardItem(QString("Vertical Rate")));
     model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
 
-    ui->tableView->setModel(model);
+    this->_tabele->setModel(model);
 }
 
 /*!
@@ -33,8 +118,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
     delete worker;
+    this->destroy();
 }
 
 /*!
@@ -43,20 +128,34 @@ MainWindow::~MainWindow()
 
 void MainWindow::setConnections()
 {
-    connect(ui->actionUpdate, SIGNAL(triggered()),                      // połączenie przycisku z menu z metodą aktualizuj dane
+    connect(this->actionUpdate, SIGNAL(triggered()),                // połączenie przycisku z menu z metodą aktualizuj dane
             this, SLOT(updateData()));
-    connect(ui->actionExit, SIGNAL(triggered()),                        // połączenie przycisku z menu z metodą zamykajacą aplikację
+    connect(this->actionExite, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą zamykajacą aplikację
             this, SLOT(close()));
-    connect(ui->actionSaveWindow, SIGNAL(triggered()),                  // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
+    connect(this->actionSaveWindow, SIGNAL(triggered()),          // połączenie przycisku z menu z metodą wykonującą zrzut ekranu
             this, SLOT(takeScreen()));
-    connect(ui->actionAboutApp, SIGNAL(triggered()),                    // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
+    connect(this->actionAboutApp, SIGNAL(triggered()),            // połączenie przycisku z menu z metodą wyświetlającą informację o aplikacji
             this, SLOT(aboutApp()));
-    connect(ui->actionAboutQt, SIGNAL(triggered()),                     // połączenie przycisku z menu z metodą wyświetlajacą informacje o Qt
-            qApp, SLOT(aboutQt()));
-    connect(ui->actionMinimize, SIGNAL(triggered()),                    // połączenie przycisku z menu z metodą minimalizującą okno
+    connect(this->actionMinimized, SIGNAL(triggered()),
             this, SLOT(showMinimized()));
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),  // połaczenie worker-a z metodą odbierajaca dane
             this, SLOT(handle_result()));
+    connect(this->_timeSlider, SIGNAL(valueChanged(int)),
+            this->_timeInd, SLOT(setNum(int)));
+    connect(this->_timeSlider, SIGNAL(valueChanged(int)),
+            this, SLOT(prepareTimer(int)));
+}
+
+/*!
+ * \brief MainWindow::prepareTimer(int timerPeriod) - funkcja nastawiająca interwał Timer'a
+ *  - timerPeriod - wielkość ustawionego okresu w sekundach
+ */
+void MainWindow::prepareTimer(int timerPeriod)
+{
+    this->_timer->setInterval(timerPeriod*1000);
+    qDebug() << "Timer set to " << timerPeriod;
+    qDebug() << "Timer redy to go!!";
+    this->_acceptTimeButton->setEnabled(true);
 }
 
 /*!
@@ -182,7 +281,7 @@ void MainWindow::handle_result()
         qDebug() << "sensors: " << planesObjects[i]->getSensors();
         qDebug() << "-------------------------------------------";
     }
-    ui->tableView->setModel(model);
+    this->_tabele->setModel(model);
 
     qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
 
@@ -340,16 +439,15 @@ void MainWindow::aboutApp()
     QMessageBox mssgbox;
     QString info;
     info = QString("<b>Nasz wspanialy radiator serwerowy :D</b><br /><br />") +
-           //QString("<p><img src=\":/Images/Images/logo_ver2.png\" alt=\"logo\"></p>")+
-           QString("Program <em><b>\"RADIATOR\"</b></em>   jest efektem pracy przy projekcie: \"Radiator Serwerowy wyswietlajacy dynamicznie inforamcje\" ") +
-           QString("zmodyfikowany o mozliwosc dokonywania przekrojow. Stanowi on projekt zaliczeniowym autorstwa studentow: <br />")+
-           QString("Michala Kluski  i Macieja Kucharskiego <br>") +
-           QString("realizowanego w ramach przedmiotu \"Otwarte oprogramowanie w systemach wbudowanych\"<br/>AGH Czerwiec A.D.2017<br />")+
-           QString("<hr><br>Osiagniete cele:<br /><ul>") +
-           QString("<li>Wyswietla inforamcje</li>") +
-           QString("<li>Pieknie dziala \\(^.^)/ .</li></ul>");
+            //QString("<p><img src=\":/Images/Images/logo_ver2.png\" alt=\"logo\"></p>")+
+            QString("Program <em><b>\"skyRad\"</b></em>   jest efektem pracy przy projekcie: \"Radiator Serwerowy wyswietlajacy dynamicznie inforamcje\" ") +
+            QString("Stanowi on projekt zaliczeniowym autorstwa studentow: <br />")+
+            QString("Michala Kluski  i Macieja Kucharskiego <br>") +
+            QString("realizowanego w ramach przedmiotu \"Otwarte oprogramowanie w systemach wbudowanych\"<br/>AGH Czerwiec A.D.2017<br />")+
+            QString("<hr><br>Osiagniete cele:<br /><ul>") +
+            QString("<li>Pobiera informacje o polskich samolotach w powietrzu poprzez zapytanie REST</li>") +
+            QString("<li>Wyswietla inforamcje w formie tabelki</li>") +
+            QString("<li>Pieknie dziala \\(^.^)/ .</li></ul>");
 
     mssgbox.information(this,"Informacje o programie",info);
-//tytułem projektu, krótkim celem i założeniami projektu, danymi autora oraz nazwą przedmiotu, rok i miesiąc wykonania
-
 }
