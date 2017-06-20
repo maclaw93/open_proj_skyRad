@@ -15,8 +15,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     httprequestworker.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    plane.cpp
 
 HEADERS  += \
     httprequestworker.h \
-    mainwindow.h
+    mainwindow.h \
+    plane.h

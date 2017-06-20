@@ -26,6 +26,12 @@
 #include <QPixmap>
 #include <QTableView>
 #include "httprequestworker.h"
+#include "plane.h"
+#include <QList>
+
+#include <QTableView>
+#include <QStandardItemModel>
+
 #include <QDebug>
 
 class MainWindow : public QMainWindow
@@ -40,8 +46,15 @@ public:
     ~MainWindow();
 
 private:
-    QPixmap image;                              ///<zmienna zapamiętująca obraz
-    HttpRequestWorker *worker;
+    QPixmap image;                              ///< zmienna zapamiętująca obraz
+    HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
+    QStandardItemModel *model;                  ///< wskaźnik na model
+
+    int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
+    int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
+    QString selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message);           ///< metoda zwracająca rekord
+    plane* parsingData(QString planeRecordData);                                                             ///< metoda zwracająca obiekt klasy plane
+    bool toBoolean(QString);
 
     //wskazniki od wytworzenia okienka
     QWidget* _mainWidget;
@@ -53,7 +66,7 @@ private:
     QStatusBar* _mainStatusBar;
 
     //elementy GUI
-    QTableView* _tabela;
+    QTableView* _tabele;
     QGroupBox* _leftPart;
     QVBoxLayout* _leftPartLayout;
     QGroupBox* _timerGroup;
@@ -75,12 +88,10 @@ protected:
     QAction* actionSaveWindow;
     QAction* actionAboutApp;
     QAction* actionMinimized;
-    //QAction* actionAboutQt;
-
 
 private slots:
-    void updateData();
-    void handle_result();
+    void updateData();                          ///< metoda aktualizujaca dane o samolotach
+    void handle_result();                       ///< metoda przyjmująca odebrane dane
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji

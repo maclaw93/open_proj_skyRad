@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //elementy na glownym panelu
     _leftPart = new QGroupBox(this);
     _leftPartLayout = new QVBoxLayout;
-    _tabela = new QTableView(this);
+    _tabele = new QTableView(this);
 
     //Timerowe rzeczy
     _timerGroup = new QGroupBox(_leftPart);
@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //to powoduje ze zostaje tej samej wielkosci ta grupa
     _leftPart->setLayout(_leftPartLayout);
     _leftPart->setStyleSheet("margin: 0px 0px 0px;");
-    _mainLayout->addWidget(_tabela,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
+    _mainLayout->addWidget(_tabele,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
     _mainLayout->addWidget(_leftPart,0,1); //"lewa część" ma być ulokowana w komórce (0,1)
     _mainWidget->setLayout(_mainLayout);
     this->setCentralWidget(_mainWidget);
@@ -93,13 +93,38 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setMenuBar(_menuBar);
 
     setConnections();
+
+    model = new QStandardItemModel(1,1,this);
+    model->setHorizontalHeaderItem(0, new QStandardItem(QString("Icao24")));
+    model->setHorizontalHeaderItem(1, new QStandardItem(QString("Callsign")));
+    model->setHorizontalHeaderItem(2, new QStandardItem(QString("Origin Country")));
+    model->setHorizontalHeaderItem(3, new QStandardItem(QString("Time Position")));
+    model->setHorizontalHeaderItem(4, new QStandardItem(QString("Time Velocity")));
+    model->setHorizontalHeaderItem(5, new QStandardItem(QString("Longitude")));
+    model->setHorizontalHeaderItem(6, new QStandardItem(QString("Latitude")));
+    model->setHorizontalHeaderItem(7, new QStandardItem(QString("Altitude")));
+    model->setHorizontalHeaderItem(8, new QStandardItem(QString("On Ground")));
+    model->setHorizontalHeaderItem(9, new QStandardItem(QString("Velocity")));
+    model->setHorizontalHeaderItem(10, new QStandardItem(QString("Heading")));
+    model->setHorizontalHeaderItem(11, new QStandardItem(QString("Vertical Rate")));
+    model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
+
+    this->_tabele->setModel(model);
 }
+
+/*!
+ * \brief MainWindow::~MainWindow() - destruktory
+ */
 
 MainWindow::~MainWindow()
 {
     delete worker;
     this->destroy();
 }
+
+/*!
+ * \brief MainWindow::setConnections() - funkcja zawierająca sygnały i sloty
+ */
 
 void MainWindow::setConnections()
 {
@@ -113,7 +138,7 @@ void MainWindow::setConnections()
             this, SLOT(aboutApp()));
     connect(this->actionMinimized, SIGNAL(triggered()),
             this, SLOT(showMinimized()));
-    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),
+    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker*)),  // połaczenie worker-a z metodą odbierajaca dane
             this, SLOT(handle_result()));
     connect(this->_timeSlider, SIGNAL(valueChanged(int)),
             this->_timeInd, SLOT(setNum(int)));
@@ -153,41 +178,225 @@ void MainWindow::updateData()
 
 /*!
  * \brief MainWindow::handle_result(HttpRequestWorker *worker) - funkcja wyłapuje odpowiedź
- *  - worker - wskaźnik na połączenie
+ *
+ *
+ * - worker - wskaźnik na połączenie
  */
 
-void MainWindow::handle_result() {
-    QString msg;
+void MainWindow::handle_result()
+{
+    QString message;
     QString match = QString("Poland");
     int count = 0;
 
-    if (worker->error_type == QNetworkReply::NoError) {
-        // communication was successful
-        msg = "Success - Response: " + worker->response;
-    }
-    else {
-        // an error occurred
-        msg = "Error: " + worker->error_str;
+    if (worker->error_type == QNetworkReply::NoError)
+    {
+        message = "Success - Response: " + worker->response;    // komunikacja powiodła się
+
+    }else{
+
+        message = "Error: " + worker->error_str;    // wystąpił błąd
     }
 
-    int j = 0;
+    int firstCountryLetterIndex = 0;
+    int firstRecordLetterIndex = 0;
+    int lastRecordLetterIndex = 0;
+    QString planeRecordData = "";
+    QList <plane*> planesObjects;
 
-    while ((j = msg.indexOf(match, j)) != -1)
+    while ((firstCountryLetterIndex = message.indexOf(match, firstCountryLetterIndex)) != -1)
     {
         count++;
-        qDebug() << "Found Poland tag at index position" << j;
+        qDebug() << "Found Poland tag at index position" << firstCountryLetterIndex;
 
-        for(int i=0;i<=5;i++)
-        {
-            qDebug() << msg[j+i];
-        }
-        ++j;
+        firstRecordLetterIndex = searchForBeginning(firstCountryLetterIndex, message);
+        qDebug() << "Record begin: " << firstRecordLetterIndex;
+        lastRecordLetterIndex = searchForEnd(firstCountryLetterIndex, message);
+        qDebug() << "Record finish: " << lastRecordLetterIndex;
+        planeRecordData = selectRecord(firstRecordLetterIndex, lastRecordLetterIndex, message);
+        qDebug() << "Record: " << planeRecordData;
+
+        planesObjects.push_back(parsingData(planeRecordData));
+
+        ++firstCountryLetterIndex;
 
     }
 
-    qDebug() << "Number of Poland tag at mesage" << count;          // początek informajci o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
-    //QMessageBox::information(this, "", msg);
+    qDebug() << "Amount of elements in QList: " << planesObjects.size();
+
+    for (int i = 0; i < planesObjects.size(); i++)
+    {
+        QStandardItem *row0 = new QStandardItem(planesObjects[i]->getIcao24());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 0, row0);
+
+        QStandardItem *row1 = new QStandardItem(planesObjects[i]->getCallsign());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 1, row1);
+
+        QStandardItem *row2 = new QStandardItem(planesObjects[i]->getOriginCountry());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 2, row2);
+
+        QStandardItem *row3 = new QStandardItem(QString::number(planesObjects[i]->getTimePosition()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 3, row3);
+
+        QStandardItem *row4 = new QStandardItem(QString::number(planesObjects[i]->getTimeVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 4, row4);
+
+        QStandardItem *row5 = new QStandardItem(QString::number(planesObjects[i]->getLongitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 5, row5);
+
+        QStandardItem *row6 = new QStandardItem(QString::number(planesObjects[i]->getLatitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 6, row6);
+
+        QStandardItem *row7 = new QStandardItem(QString::number(planesObjects[i]->getAltitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 7, row7);
+
+        QStandardItem *row8 = new QStandardItem(QString::number(planesObjects[i]->getOnGround()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 8, row8);
+
+        QStandardItem *row9 = new QStandardItem(QString::number(planesObjects[i]->getVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 9, row9);
+
+        QStandardItem *row10 = new QStandardItem(QString::number(planesObjects[i]->getHeading()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 10, row10);
+
+        QStandardItem *row11 = new QStandardItem(QString::number(planesObjects[i]->getVerticalRate()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 11, row11);
+
+        QStandardItem *row12 = new QStandardItem(QString::number(planesObjects[i]->getSensors()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        model->setItem(i, 12, row12);
+
+        qDebug() << "Plane: " << i;
+        qDebug() << "icao24: " << planesObjects[i]->getIcao24();
+        qDebug() << "callsign: " << planesObjects[i]->getCallsign();
+        qDebug() << "originCountry: " << planesObjects[i]->getOriginCountry();
+        qDebug() << "timePosition: " << planesObjects[i]->getTimePosition();
+        qDebug() << "timeVelocity: " << planesObjects[i]->getTimeVelocity();
+        qDebug() << "longitude: " << planesObjects[i]->getLongitude();
+        qDebug() << "latitude: " << planesObjects[i]->getLatitude();
+        qDebug() << "altitude: " << planesObjects[i]->getAltitude();
+        qDebug() << "onGround: " << planesObjects[i]->getOnGround();
+        qDebug() << "velocity: " << planesObjects[i]->getVelocity();
+        qDebug() << "heading: " << planesObjects[i]->getHeading();
+        qDebug() << "verticalRate: " << planesObjects[i]->getVerticalRate();
+        qDebug() << "sensors: " << planesObjects[i]->getSensors();
+        qDebug() << "-------------------------------------------";
+    }
+    this->_tabele->setModel(model);
+
+    qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
+
 }
+
+/*!
+ * \brief MainWindow::parsingData(QString planeRecordData) - funkcja do parsowania danych tekstowych oraz tworzenia obiektów klasy plane
+ *
+ * - planeRecordData - dane typu QString z informacjami o samolocie
+ *
+ */
+
+plane* MainWindow::parsingData(QString planeRecordData)
+{
+    QString planeData [18], tempData;
+    int indexPlaneData = 0;
+
+    for (int i = 0; i <= planeRecordData.size(); i++)
+    {
+
+        if ((planeRecordData[i] == ',') || (planeRecordData[i] == ']'))
+        {
+            planeData[indexPlaneData] = tempData;
+//            qDebug() << tempData;
+            tempData = "";
+            indexPlaneData++;
+        }
+
+        if ((planeRecordData[i] != ' ') && (planeRecordData[i] != '"') && planeRecordData[i] != ',' && (planeRecordData[i] != '[') && (planeRecordData[i] != ']'))
+        {
+            tempData += planeRecordData[i];
+        }
+        //["4891a6","ENT582  ","Poland",1497533490,1497533490,7.2239,53.5819,10972.8,false,197.6,219.82,0,null,11193.78,null,false,false,0]
+    }
+
+    plane* Plane = new plane(planeData[0], planeData[1], planeData[2], planeData[3].toFloat(),
+                    planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
+                    planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
+                    planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
+
+    return Plane;
+
+}
+
+/*!
+ * \brief MainWindow::toBoolean(QString textToCheck) - funkcja do konwersji zmiennej tekstowej na boolean
+ *
+ * - textToCheck - dane typu QString do przekonwertowania
+ *
+ */
+
+bool MainWindow::toBoolean(QString textToCheck)
+{
+    if ((textToCheck == "true") || (textToCheck == "TRUE") || (textToCheck == "1"))
+    {
+        return true;
+
+    }else{
+
+        return false;
+    }
+}
+
+
+/*!
+ * \brief MainWindow::takeScreen() - funkcja szukająca poczatku rekordu
+ */
+
+int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
+{
+    int tempLetterIndex = firstCountryLetterIndex;
+
+    do
+    {
+        tempLetterIndex--;
+
+    }while(message[tempLetterIndex] != '[');
+
+    return tempLetterIndex;
+}
+
+/*!
+ * \brief MainWindow::searchForEnd() - funkcja szukająca końca rekordu
+ */
+
+int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
+{
+    int tempLetterIndex = firstCountryLetterIndex;
+
+    do
+    {
+        tempLetterIndex++;
+
+    }while(message[tempLetterIndex] != ']');
+
+    return tempLetterIndex;
+}
+
+/*!
+ * \brief MainWindow::selectRecord() - funkcja zwracająca rekord
+ */
+
+QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message)
+{
+    QString recordBuffer = "";
+
+    for(int i = firstRecordLetterIndex; i <= lastRecordLetterIndex; i++)
+    {
+        recordBuffer += message[i];
+    }
+
+    return recordBuffer;
+}
+
+
 
 /*!
  * \brief MainWindow::takeScreen() - funkcja wykonująca zrzut całego okna aplikcji
