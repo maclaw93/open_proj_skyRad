@@ -50,6 +50,7 @@ private:
     QPixmap image;                              ///< zmienna zapamiętująca obraz
     HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
     QStandardItemModel *model;                  ///< wskaźnik na model
+    bool isFirstTime;                           ///< zmienna poczatkowa inicjacyjna pobieranie danych
 
     int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
     int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
@@ -98,9 +99,12 @@ private slots:
     void takeScreen();                          ///< metoda wykonywanie screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
-    void prepareTimer(int timerPeriod);
+    void prepareTimer();
     void updateTrigged();
     void displRemaningTime();
+
+signals:
+    void go();
 
 };
 

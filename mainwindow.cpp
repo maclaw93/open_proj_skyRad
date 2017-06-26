@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     worker = new HttpRequestWorker(this);
     this->setGeometry(0,0,600,400);
+    isFirstTime = true;
 
     //glowny panel GUI
     _mainWidget = new QWidget(this);
@@ -26,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     _timerInd = new QLabel;
     _timeSlider = new QSlider;
     _acceptTimeButton = new QPushButton("START TIMER!!!");
-    _acceptTimeButton->setDisabled(true);
 
     _timer = new QTimer;
     _cutdownTimer = new CutdownTimer(this,0,true);
@@ -115,7 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
 
     this->_tabele->setModel(model);
-    _tabele->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    _tabele->setEditTriggers(QAbstractItemView::NoEditTriggers);//zabezpieczenie nie edytowalnosci tabelki
 }
 
 /*!
@@ -126,6 +126,10 @@ MainWindow::~MainWindow()
 {
     delete worker;
     delete model;
+    this->_timer->stop();
+    this->_cutdownTimer->elapsStop();
+    delete _timer;
+    delete _cutdownTimer;
     this->destroy();
 }
 
@@ -149,16 +153,14 @@ void MainWindow::setConnections()
             this, SLOT(handle_result()));
     connect(this->_timeSlider, SIGNAL(valueChanged(int)),
             this->_timeInd, SLOT(setNum(int)));
-    connect(this->_timeSlider, SIGNAL(valueChanged(int)),
-            this, SLOT(prepareTimer(int)));
     connect(this->_timer, SIGNAL(timeout()),
             this, SLOT(updateTrigged()));
-    connect(this->_acceptTimeButton, SIGNAL(clicked()),
+    connect(this, SIGNAL(go()),
             this->_timer, SLOT(start()));
-    connect(this->_acceptTimeButton, SIGNAL(clicked()),
+    connect(this, SIGNAL(go()),
             this->_cutdownTimer, SLOT(elapsStrat()));
     connect(this->_acceptTimeButton, SIGNAL(clicked()),
-            this, SLOT(updateData()));
+            this, SLOT(prepareTimer()));
     connect(this->_cutdownTimer, SIGNAL(timeout()),
             this, SLOT(displRemaningTime()));
 }
@@ -189,13 +191,16 @@ void MainWindow::updateTrigged()
  * \brief MainWindow::prepareTimer(int timerPeriod) - funkcja nastawiająca interwał Timer'a
  *  - timerPeriod - wielkość ustawionego okresu w sekundach
  */
-void MainWindow::prepareTimer(int timerPeriod)
+void MainWindow::prepareTimer()
 {
-    this->_timer->setInterval(timerPeriod*1000);
-    this->_cutdownTimer->setTimeToElaps(timerPeriod);
-    qDebug() << "Timer set to " << timerPeriod;
-    qDebug() << "Timer redy to go!!";
-    this->_acceptTimeButton->setEnabled(true);
+    this->_timer->setInterval((this->_timeSlider->value())*1000);
+    this->_cutdownTimer->setTimeToElaps(this->_timeSlider->value());
+    qDebug() << "Timer go!!";
+    if(isFirstTime)
+    {
+        this->updateData();
+    }
+    emit go();
 }
 
 /*!
@@ -204,6 +209,7 @@ void MainWindow::prepareTimer(int timerPeriod)
 
 void MainWindow::updateData()
 {
+    this->isFirstTime = false;
     QString url_str = "https://opensky-network.org/api/states/all";
 
     HttpRequestInput input(url_str, "GET");
