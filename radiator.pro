@@ -16,9 +16,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
     httprequestworker.cpp \
     mainwindow.cpp \
-    plane.cpp
+    plane.cpp \
+    CutdownTimer.cpp
 
 HEADERS  += \
     httprequestworker.h \
     mainwindow.h \
-    plane.h
+    plane.h \
+    CutdownTimer.h

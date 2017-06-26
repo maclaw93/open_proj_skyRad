@@ -24,10 +24,12 @@ MainWindow::MainWindow(QWidget *parent) :
     _timeText2 = new QLabel;
     _timeText3 = new QLabel;
     _timerInd = new QLabel;
-    _timer = new QTimer;
     _timeSlider = new QSlider;
     _acceptTimeButton = new QPushButton("START TIMER!!!");
     _acceptTimeButton->setDisabled(true);
+
+    _timer = new QTimer;
+    _cutdownTimer = new CutdownTimer(this,0,true);
 
     //wnętrze Gui od Timera
     //pierwsza linia
@@ -119,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete worker;
+    delete model;
     this->destroy();
 }
 
@@ -144,6 +147,38 @@ void MainWindow::setConnections()
             this->_timeInd, SLOT(setNum(int)));
     connect(this->_timeSlider, SIGNAL(valueChanged(int)),
             this, SLOT(prepareTimer(int)));
+    connect(this->_timer, SIGNAL(timeout()),
+            this, SLOT(updateTrigged()));
+    connect(this->_acceptTimeButton, SIGNAL(clicked()),
+            this->_timer, SLOT(start()));
+    connect(this->_acceptTimeButton, SIGNAL(clicked()),
+            this->_cutdownTimer, SLOT(elapsStrat()));
+    connect(this->_acceptTimeButton, SIGNAL(clicked()),
+            this, SLOT(updateData()));
+    connect(this->_cutdownTimer, SIGNAL(timeout()),
+            this, SLOT(displRemaningTime()));
+}
+
+
+
+/*!
+ * \brief MainWindow::displRemaningTime() - funkcja pozostały czas do następnego
+ * odswierzenia.
+ */
+void MainWindow::displRemaningTime()
+{
+    int d = this->_cutdownTimer->getRameining();
+    this->_timerInd->setNum(d);
+}
+
+/*!
+ * \brief MainWindow::updateTrigged() - funkcja odświerzająca dane po
+ * odliczeniu czasu przez Timer.
+ */
+void MainWindow::updateTrigged()
+{
+    qDebug() << "Timer is up, update trigged";
+    this->updateData();
 }
 
 /*!
@@ -153,6 +188,7 @@ void MainWindow::setConnections()
 void MainWindow::prepareTimer(int timerPeriod)
 {
     this->_timer->setInterval(timerPeriod*1000);
+    this->_cutdownTimer->setTimeToElaps(timerPeriod);
     qDebug() << "Timer set to " << timerPeriod;
     qDebug() << "Timer redy to go!!";
     this->_acceptTimeButton->setEnabled(true);
@@ -338,9 +374,9 @@ bool MainWindow::toBoolean(QString textToCheck)
     if ((textToCheck == "true") || (textToCheck == "TRUE") || (textToCheck == "1"))
     {
         return true;
-
-    }else{
-
+    }
+    else
+    {
         return false;
     }
 }
@@ -358,7 +394,8 @@ int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
     {
         tempLetterIndex--;
 
-    }while(message[tempLetterIndex] != '[');
+    }
+    while(message[tempLetterIndex] != '[');
 
     return tempLetterIndex;
 }

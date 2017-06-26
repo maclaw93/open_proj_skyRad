@@ -17,6 +17,7 @@
 #include <QSlider>
 
 #include <QTimer>
+#include "CutdownTimer.h"
 #include <QtNetwork/QNetworkReply>
 #include <QMessageBox>
 
@@ -69,6 +70,7 @@ private:
     QTableView* _tabele;
     QGroupBox* _leftPart;
     QVBoxLayout* _leftPartLayout;
+
     QGroupBox* _timerGroup;
     QGroupBox* _displTimeGroup;
     QHBoxLayout* _timeDispLayout;
@@ -81,6 +83,7 @@ private:
     QPushButton* _acceptTimeButton;
     QSlider* _timeSlider;
     QTimer* _timer;
+    CutdownTimer* _cutdownTimer;
 
 protected:
     QAction* actionUpdate;
@@ -96,6 +99,8 @@ private slots:
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
     void prepareTimer(int timerPeriod);
+    void updateTrigged();
+    void displRemaningTime();
 
 };
 
