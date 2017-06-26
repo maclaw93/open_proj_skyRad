@@ -4,10 +4,20 @@
 #include <QFileInfo>
 #include <QBuffer>
 
+/*!
+ * \brief HttpRequestInput::HttpRequestInput() - konstruktor bezparametryczny w ciele wywołujący metode inicjalizacji
+ */
 
 HttpRequestInput::HttpRequestInput() {
     initialize();
 }
+
+/*!
+ * \brief HttpRequestInput::HttpRequestInput(QString v_url_str, QString v_http_method) - konstruktor parametryczny w ciele wywołujący metode inicjalizacji oraz ustawijący wartość poczatkowe zmienncyh
+ *
+ * - v_url_str - zmienna typu QString zawiera url
+ * - v_http_method - zmienna typu QString zwiera metodę http
+*/
 
 HttpRequestInput::HttpRequestInput(QString v_url_str, QString v_http_method) {
     initialize();
@@ -15,15 +25,35 @@ HttpRequestInput::HttpRequestInput(QString v_url_str, QString v_http_method) {
     http_method = v_http_method;
 }
 
+/*!
+ * \brief HttpRequestInput::initialize() - metoda inicjalizujaca parametry początkowe
+ */
+
 void HttpRequestInput::initialize() {
     var_layout = NOT_SET;
     url_str = "";
     http_method = "GET";
 }
 
+/*!
+ * \brief HttpRequestInput::add_var(QString key, QString value) - metoda dodająca pola zapytania
+ *
+ * - key - zmienna typu QString zawierająca klucz
+ * - value - zmienna typu QString zawierjąca wartość
+ */
+
 void HttpRequestInput::add_var(QString key, QString value) {
     vars[key] = value;
 }
+
+/*!
+ * \brief HttpRequestInput::add_file(QString variable_name, QString local_filename, QString request_filename, QString mime_type) - metoda ustawijąca pola z parametrami pliku
+ *
+ * - variable_name - nazwa zmiennej typu QString
+ * - local_filename - nazwa pliku typu QString
+ * - request_filename - nazwa pliku do zapytania
+ * - mime_type - typ kodowania zapytania
+ */
 
 void HttpRequestInput::add_file(QString variable_name, QString local_filename, QString request_filename, QString mime_type) {
     HttpRequestInputFileElement file;
@@ -34,6 +64,11 @@ void HttpRequestInput::add_file(QString variable_name, QString local_filename, Q
     files.append(file);
 }
 
+/*!
+ * \brief HttpRequestWorker::HttpRequestWorker(QObject *parent) - konstruktor parametryczny w ciele wywołujący metode inicjalizacji oraz ustawijący wartość poczatkowe zmienncyh
+ *
+ * - parent - wskażnik na obiek nadrzędny
+*/
 
 HttpRequestWorker::HttpRequestWorker(QObject *parent):QObject(parent), manager(NULL)
 {
@@ -42,6 +77,13 @@ HttpRequestWorker::HttpRequestWorker(QObject *parent):QObject(parent), manager(N
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_manager_finished(QNetworkReply*)));
 }
+
+/*!
+ * \brief HttpRequestWorker::http_attribute_encode(QString attribute_name, QString input) - metoda dekodowania odpowiedzi
+ *
+ * - attribute_name - zmienna typu QString przechowująca atrybut
+ * - input - zmienna typu QString przechowuje odpowiedź
+ */
 
 QString HttpRequestWorker::http_attribute_encode(QString attribute_name, QString input)
 {
@@ -91,6 +133,12 @@ QString HttpRequestWorker::http_attribute_encode(QString attribute_name, QString
     // return enhanced version with UTF-8 support
     return QString("%1=\"%2\"; %1*=utf-8''%3").arg(attribute_name, result, result_utf8);
 }
+
+/*!
+ * \brief HttpRequestWorker::execute(HttpRequestInput *input)  - metoda wykonująca zapytanie
+ *
+ * - input - wskaźnik na obiekt klasy HttpRequestInput
+ */
 
 void HttpRequestWorker::execute(HttpRequestInput *input) {
 
@@ -268,6 +316,12 @@ void HttpRequestWorker::execute(HttpRequestInput *input) {
     }
 
 }
+
+/*!
+ * \brief HttpRequestWorker::on_manager_finished(QNetworkReply *reply)  - metoda wychwująca błędy i kończaca zapytanie
+ *
+ * - reply - wskaźnik obiekt klasy QNetworkReply
+ */
 
 void HttpRequestWorker::on_manager_finished(QNetworkReply *reply) {
     error_type = reply->error();

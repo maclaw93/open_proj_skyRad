@@ -1,5 +1,11 @@
 #include "mainwindow.h"
 
+/*!
+ *  \brief MainWindow::MainWindow - konstruktor klasy. W ciele znajduje się tworzenie oraz budowanie wygladu okna glównego programu.
+ *  \param parent - wskaznik na obiekt nadrzędny
+ *
+ */
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -165,12 +171,10 @@ void MainWindow::setConnections()
             this, SLOT(displRemaningTime()));
 }
 
-
-
 /*!
- * \brief MainWindow::displRemaningTime() - funkcja pozostały czas do następnego
- * odswierzenia.
+ * \brief MainWindow::displRemaningTime() - funkcja pozostały czas do następnego odswierzenia.
  */
+
 void MainWindow::displRemaningTime()
 {
     int d = this->_cutdownTimer->getRameining();
@@ -178,9 +182,9 @@ void MainWindow::displRemaningTime()
 }
 
 /*!
- * \brief MainWindow::updateTrigged() - funkcja odświerzająca dane po
- * odliczeniu czasu przez Timer.
+ * \brief MainWindow::updateTrigged() - funkcja odświerzająca dane po odliczeniu czasu przez Timer.
  */
+
 void MainWindow::updateTrigged()
 {
     qDebug() << "Timer is up, update trigged";
@@ -223,10 +227,7 @@ void MainWindow::updateData()
 }
 
 /*!
- * \brief MainWindow::handle_result(HttpRequestWorker *worker) - funkcja wyłapuje odpowiedź
- *
- *
- * - worker - wskaźnik na połączenie
+ * \brief MainWindow::handle_result() - funkcja wyłapuje odpowiedź, wyszukuje informacje o Polskich samolotach, przekazuje je do przetworzenia oraz odpowiada za uzupełenie tabeli na podstawie otrzymanych wyników
  */
 
 void MainWindow::handle_result()
@@ -393,7 +394,11 @@ bool MainWindow::toBoolean(QString textToCheck)
 
 
 /*!
- * \brief MainWindow::takeScreen() - funkcja szukająca poczatku rekordu
+ * \brief MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message) - funkcja zwracjaca indeks początku rekordu w otrzymenym ciagu do analizy
+ *
+ * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland)
+ * - message - zmienna typu QString zawiera odebrane dane z serwera
+ *
  */
 
 int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
@@ -411,7 +416,11 @@ int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
 }
 
 /*!
- * \brief MainWindow::searchForEnd() - funkcja szukająca końca rekordu
+ * \brief MainWindow::searchForEnd(int firstCountryLetterIndex, QString message) - funkcja zwracjaca indeks końca rekordu w otrzymenym ciagu do analizy
+ *
+ * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland)
+ * - message - zmienna typu QString zawiera odebrane dane z serwera
+ *
  */
 
 int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
@@ -428,7 +437,12 @@ int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
 }
 
 /*!
- * \brief MainWindow::selectRecord() - funkcja zwracająca rekord
+ * \brief MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message) - funkcja zwracająca rekord z danymi jednego samolotu
+ *
+ * - firstRecordLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery rekordu infromacji o wybranym samolocie
+ * - lastRecordLetterIndex - zmienna typu integer przechowuje indeks ostatniej litery rekordu infromacji o wybranym samolocie
+ * - message - zmienna typu QString zawiera odebrane dane z serwera
+ *
  */
 
 QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message)
@@ -451,9 +465,7 @@ QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLette
 
 void MainWindow::takeScreen()
 {
-    image = QPixmap::grabWidget(this);                                        // sposób nr1 - tylko widget(nie widzi VTKWidget ;/ )
-    //image = QPixmap::grabWindow(QApplication::desktop()->winId())             // sposób nr2 - cały pulpit
-    //image = QPixmap::grabWindow(QApplication::desktop()->winId(),QMainWindow::x(),QMainWindow::y(),QMainWindow::width(),QMainWindow::height());  // sposób nr.3 - tylko okno
+    image = QPixmap::grabWidget(this);                                        // sposób nr1 - tylko widget
 
     saveScreen();
 }
