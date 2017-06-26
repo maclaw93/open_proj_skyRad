@@ -94,6 +94,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _menuBar->addMenu(_helpManu);
     this->setMenuBar(_menuBar);
 
+    //wyzbycie sie belki tytulowej okienka
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
     setConnections();
 
     model = new QStandardItemModel(1,1,this);
@@ -112,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
 
     this->_tabele->setModel(model);
+    _tabele->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 /*!
