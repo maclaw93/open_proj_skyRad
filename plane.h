@@ -3,6 +3,21 @@
 
 #include <QString>
 
+/*! Klasa Plane - obiekt reprezentujący dane na temat samolotu.
+ *
+ * Klasa stanowi zbiór danych na temat pojedyńczego samolotu, uzyskanych po obróbce odpowiedzi
+ * na zapytanie GET z interfejsu REST.
+ *
+ *
+ * Klasa posiada:
+ * publiczne funkcje - pozwalające na ustawienie/pobrabnie inforamcji;
+ * prywatne zmienne - przechowywujące dane danego samolotu.
+
+    Michał Kluska & Maciek Kucharski, czerwiec 2017
+
+*/
+
+
 class plane
 {
 public:
@@ -52,18 +67,18 @@ public:
 
 private:
     QString icao24;                 ///< pole przechowujące unikalny ICAO 24-bitowy adres transpondera w kodze hex
-    QString callsign;               ///< pole przechowuje 8 znakowy numer samolotu
-    QString originCountry;          ///< pole przechowuje nazwę kraju powiząnge z numermem ICAO
-    float timePosition;             ///< pole przechowuje unix timestamp (sekundy) dla ostatniej aktualiazji pozycji
-    float timeVelocity;             ///< pole przechowuje unix timestamp (sekundy) dla ostatniej aktualizacji prędkości
-    float longitude;                ///< pole przechowuje WGA-84 długość geograficzna w stopniach
-    float latitude;                 ///< pole przechowuje WGA-84 szerokość geograficzna w stopniach
-    float altitude;                 ///< pole przechowuje barometryczna lub geometryczna wysokość
-    bool onGround;                  ///< pole przechowuje wartość logiczna odpowiadajaca stanowi samolotu na ziemi lub w powietrzu
-    float velocity;                 ///< pole przechowuje prędkość nad ziemią m/s
-    float heading;                  ///< pole przechowuje kierunek samolotu w stopniach zgodnie ze wskazówkami zegara od północy
-    float verticalRate;             ///< pole przechowuje prędkość prostopadła do ziemi m/s (samolot sie wznosi)
-    int sensors;                    ///< pole przechowuje ID sensora wektora stanowego...
+    QString callsign;               ///< pole przechowujące 8 znakowy numer samolotu
+    QString originCountry;          ///< pole przechowujące nazwę kraju powizanego z numerem ICAO
+    float timePosition;             ///< pole przechowujące unix timestamp (sekundy) dla ostatniej aktualiazji pozycji
+    float timeVelocity;             ///< pole przechowujące unix timestamp (sekundy) dla ostatniej aktualizacji prędkości
+    float longitude;                ///< pole przechowujące WGA-84 długość geograficzną w stopniach
+    float latitude;                 ///< pole przechowujące WGA-84 szerokość geograficzną w stopniach
+    float altitude;                 ///< pole przechowujące barometryczna lub geometryczna wysokość
+    bool onGround;                  ///< pole przechowujące wartość logiczną, odpowiadającą stanowi samolotu na ziemi lub w powietrzu
+    float velocity;                 ///< pole przechowujące prędkość nad ziemią w m/s
+    float heading;                  ///< pole przechowujące kierunek samolotu w stopniach zgodnie ze wskazówkami zegara od północy
+    float verticalRate;             ///< pole przechowujące prędkość prostopadłą do ziemi w m/s (samolot się wznosi)
+    int sensors;                    ///< pole przechowujące ID sensora wektora stanowego
 
 };
 

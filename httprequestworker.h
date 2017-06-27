@@ -7,7 +7,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-/*! Klasa HttpRequestInputFileElement - odpowiada za przechowanie inforamcji plikach wymiany
+/*! Klasa HttpRequestInputFileElement - odpowiada za przechowanie inforamcji o plikach wymiany
  *
  * Klasa posiada:
  *
@@ -23,14 +23,14 @@ enum HttpRequestVarLayout {NOT_SET, ADDRESS, URL_ENCODED, MULTIPART}; ///< defin
 class HttpRequestInputFileElement {
 
 public:
-    QString variable_name;      ///< zmienna przechwująca nazwę zmiennej
+    QString variable_name;      ///< zmienna przechowująca nazwę zmiennej
     QString local_filename;     ///< zmienna przechowująca nazwę lokalnego pliku
-    QString request_filename;   ///< zmienna przechowująca nazwę pliku rządanego
-    QString mime_type;          ///< zmienna przechowujaća typ mime
+    QString request_filename;   ///< zmienna przechowująca nazwę pliku żądanego
+    QString mime_type;          ///< zmienna przechowująca typ mime
 
 };
 
-/*! Klasa HttpRequestInput - odpowiada rządanie Http
+/*! Klasa HttpRequestInput - odpowiada żądanie Http
  *
  * W obrębie klasy wykonywane są wszystkie działania związane z komunikacją aplikacji z serwerem i pobieraniem danych
  *
@@ -46,21 +46,21 @@ public:
 class HttpRequestInput {
 
 public:
-    QString url_str;                            ///< zmienna przechwująca adres url
-    QString http_method;                        ///< zmienna przechwująca metodę  http
-    HttpRequestVarLayout var_layout;            ///< zmienna przechwująca zmienna layout-a
-    QMap<QString, QString> vars;                ///< QMap-a zawierajaca pola QString
+    QString url_str;                            ///< zmienna przechowywująca adres url
+    QString http_method;                        ///< zmienna przechowywująca metodę  http
+    HttpRequestVarLayout var_layout;            ///< zmienna przechowywująca zmienna layout-u
+    QMap<QString, QString> vars;                ///< QMap-a zawierająca pola QString
     QList<HttpRequestInputFileElement> files;   ///< Lista typu HttpRequestInputFileElement
 
     HttpRequestInput();                                         ///< konstruktor bez parametryczny
     HttpRequestInput(QString v_url_str, QString v_http_method); ///< konstruktor parametryczny
     void initialize();                                          ///< metoda inicjalizacji
-    void add_var(QString key, QString value);                   ///< metoda dodajaca arkumenty zapytania
+    void add_var(QString key, QString value);                   ///< metoda dodająca arkumenty zapytania
     void add_file(QString variable_name, QString local_filename, QString request_filename, QString mime_type); ///< metoda dodająca pliki
 
 };
 
-/*! Klasa HttpRequestWorker - odpowiada za tworzenie workera wykonującego zapytania
+/*! Klasa HttpRequestWorker - odpowiada za tworzenie worker'a wykonującego zapytania
  *
  *
  * Klasa posiada:
@@ -84,8 +84,8 @@ public:
 
     explicit HttpRequestWorker(QObject *parent = 0);    ///< konstruktor jawny
 
-    QString http_attribute_encode(QString attribute_name, QString input);   ///< metoda zwracjąca QStrning z atrybutami kodowania
-    void execute(HttpRequestInput *input);                                  ///< metoda wykonujaca zapytanie
+    QString http_attribute_encode(QString attribute_name, QString input);   ///< metoda zwracająca QStrning z atrybutami kodowania
+    void execute(HttpRequestInput *input);                                  ///< metoda wykonująca zapytanie
 
 signals:
     void on_execution_finished(HttpRequestWorker *worker);          ///< metoda na zakonczenie wykonania zapytania

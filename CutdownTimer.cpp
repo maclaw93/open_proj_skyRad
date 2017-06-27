@@ -1,10 +1,10 @@
 #include "CutdownTimer.h"
 
 /*!
- *  \brief CutdownTimer::CutdownTimer - konstruktor klasy. W ciele znajdują się połączenia sygnałów i slotów, ustanienia powtarzania i czasu do odliczania.
- *  \param parent - wskaznik na obiekt nadrzędny.
+ *  \brief CutdownTimer::CutdownTimer - konstruktor klasy. W ciele znajdują się połączenia sygnałów i slotów, ustawienie czasu do powtarzania i odliczania.
+ *  \param parent - wskaźnik na obiekt nadrzędny.
  *  \param sek - nastawa czasu dla licznika, wyrażana w sekundach.
- *  \param repetative - flaga do zapętlania licznika
+ *  \param repetative - flaga do zapętlania licznika.
  *
  */
 
@@ -24,7 +24,7 @@ CutdownTimer::CutdownTimer(QObject *parent, int sek, bool repetative) :
 }
 
 /*!
- * \brief CutdownTimer::elapsStrat() - metoda wyzwalająca licznik czasu
+ * \brief CutdownTimer::elapsStrat() - metoda wyzwalająca licznik czasu.
  */
 
 void CutdownTimer::elapsStrat()
@@ -34,7 +34,7 @@ void CutdownTimer::elapsStrat()
 }
 
 /*!
- * \brief CutdownTimer::setRepetating() - metoda ustawiająca flage zapętlenia licznika
+ * \brief CutdownTimer::setRepetating() - metoda ustawiająca flagę zapętlenia licznika.
  */
 
 void CutdownTimer::setRepetating(bool rep)
@@ -43,7 +43,7 @@ void CutdownTimer::setRepetating(bool rep)
 }
 
 /*!
- * \brief CutdownTimer::getRepetating() -metoda zwracająca flagę zapętlenia licznika
+ * \brief CutdownTimer::getRepetating() - metoda zwracająca flagę zapętlenia licznika.
  */
 
 bool CutdownTimer::getRepetating()
@@ -52,7 +52,7 @@ bool CutdownTimer::getRepetating()
 }
 
 /*!
- * \brief CutdownTimer::isElapsed() - funckja do odliczania czasu
+ * \brief CutdownTimer::isElapsed() - funckja do odliczania czasu.
  */
 
 void CutdownTimer::isElapsed()
@@ -66,7 +66,7 @@ void CutdownTimer::isElapsed()
 }
 
 /*!
- * \brief CutdownTimer::elapsStop() - funkcja do sprawdzania cykli odliczania
+ * \brief CutdownTimer::elapsStop() - funkcja do sprawdzania cykli odliczania.
  */
 
 void CutdownTimer::elapsStop()
@@ -78,9 +78,9 @@ void CutdownTimer::elapsStop()
 }
 
 /*!
- * \brief CutdownTimer::setTimeToElaps(int sek) - funkcja ustawiająca czas do odliczania
+ * \brief CutdownTimer::setTimeToElaps(int sek) - funkcja ustawiająca czas do odliczania.
  *
- * \param sek - zmienna typu integer zawierająca ilość sekund do odliczania
+ * \param sek - zmienna typu integer zawierająca ilość sekund do odliczania.
  */
 
 void CutdownTimer::setTimeToElaps(int sek)
@@ -89,7 +89,7 @@ void CutdownTimer::setTimeToElaps(int sek)
 }
 
 /*!
- * \brief CutdownTimer::getTimeToElaps() - funkcja pobierająca czas do odliczania
+ * \brief CutdownTimer::getTimeToElaps() - funkcja pobierająca czas do odliczania.
  */
 
 int CutdownTimer::getTimeToElaps()
@@ -98,7 +98,7 @@ int CutdownTimer::getTimeToElaps()
 }
 
 /*!
- * \brief CutdownTimer::getRameining() - funkcja pobierjąca czas pozostały do odlicznia
+ * \brief CutdownTimer::getRameining() - funkcja zwracająca czas pozostały do odlicznia.
  */
 
 int CutdownTimer::getRameining()

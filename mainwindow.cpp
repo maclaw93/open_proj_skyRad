@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 
 /*!
- *  \brief MainWindow::MainWindow - konstruktor klasy. W wywołuje tworzenie oraz budowanie wygladu okna glównego programu.
- *  \param parent - wskaznik na obiekt nadrzędny
+ *  \brief MainWindow::MainWindow - konstruktor klasy. Wywołuje tworzenie oraz budowanie wygladu okna glównego programu
+ *         oraz przygotowanie powiązań interakcji pomiędzy elementami GUI.
+ *  \param parent - wskaznik na obiekt nadrzędny.
  *
  */
 
@@ -18,12 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
     _mainLayout = new QGridLayout(this);
 
     //elementy na glownym panelu
-    _leftPart = new QGroupBox(this);
-    _leftPartLayout = new QVBoxLayout;
+    _rightPart = new QGroupBox(this);
+    _rightPartLayout = new QVBoxLayout;
     _tabele = new QTableView(this);
 
     //Timerowe rzeczy
-    _timerGroup = new QGroupBox(_leftPart);
+    _timerGroup = new QGroupBox(_rightPart);
     _displTimeGroup = new QGroupBox(_timerGroup);
     _timeDispLayout = new QHBoxLayout;
     _timeInd = new QLabel;
@@ -68,16 +69,16 @@ MainWindow::MainWindow(QWidget *parent) :
     _timerSetLayout->addWidget(_timerInd);
     _timerSetLayout->setSizeConstraint(QLayout::SetFixedSize);
 
-    ///ulorzenie calego centaralnego GUI
+    //ulożenie całego centaralnego GUI
     _timerGroup->setLayout(_timerSetLayout);
     _timerGroup->setTitle("Timer");
     _timerGroup->setStyleSheet("QGroupBox { border: 1px solid grey; border-radius: 9px; margin-top: 0.5em;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 0px 0 0px;}");
-    _leftPartLayout->addWidget(_timerGroup);
-    _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //grupa pozostaje tej samej wielkości
-    _leftPart->setLayout(_leftPartLayout);
-    _leftPart->setStyleSheet("margin: 0px 0px 0px;");
+    _rightPartLayout->addWidget(_timerGroup);
+    _rightPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //grupa pozostaje tej samej wielkości
+    _rightPart->setLayout(_rightPartLayout);
+    _rightPart->setStyleSheet("margin: 0px 0px 0px;");
     _mainLayout->addWidget(_tabele,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
-    _mainLayout->addWidget(_leftPart,0,1); //"lewa część" ma być ulokowana w komórce (0,1)
+    _mainLayout->addWidget(_rightPart,0,1); //"lewa część" ma być ulokowana w komórce (0,1)
     _mainWidget->setLayout(_mainLayout);
     this->setCentralWidget(_mainWidget);
     this->setWindowTitle("Nowe GUI projektu");
@@ -143,7 +144,7 @@ MainWindow::~MainWindow()
 }
 
 /*!
- * \brief MainWindow::setConnections() - funkcja zawierająca sygnały i sloty
+ * \brief MainWindow::setConnections() - funkcja zawierająca sygnały i sloty.
  */
 
 void MainWindow::setConnections()
@@ -175,7 +176,7 @@ void MainWindow::setConnections()
 }
 
 /*!
- * \brief MainWindow::displRemaningTime() - funkcja zwracajaca pozostały czas do następnego odswierzenia.
+ * \brief MainWindow::displRemaningTime() - funkcja zwracająca pozostały czas do następnego odświeżenia.
  */
 
 void MainWindow::displRemaningTime()
@@ -185,7 +186,7 @@ void MainWindow::displRemaningTime()
 }
 
 /*!
- * \brief MainWindow::updateTrigged() - funkcja odświerzająca dane po odliczeniu czasu przez Timer.
+ * \brief MainWindow::updateTrigged() - funkcja odświeżająca dane po odliczeniu czasu przez Timer.
  */
 
 void MainWindow::updateTrigged()
@@ -195,7 +196,7 @@ void MainWindow::updateTrigged()
 }
 
 /*!
- * \brief MainWindow::prepareTimer() - funkcja przygotowywująca i wyzwalająca timery
+ * \brief MainWindow::prepareTimer() - funkcja przygotowywująca i wyzwalająca timery.
  */
 void MainWindow::prepareTimer()
 {
@@ -209,7 +210,7 @@ void MainWindow::prepareTimer()
 }
 
 /*!
- * \brief MainWindow::updateData() - funkcja wykonująca zapytanie GET
+ * \brief MainWindow::updateData() - funkcja wykonująca zapytanie GET.
  */
 
 void MainWindow::updateData()
@@ -222,7 +223,8 @@ void MainWindow::updateData()
 }
 
 /*!
- * \brief MainWindow::handle_result() - funkcja wyłapuje odpowiedź, wyszukuje informacje o Polskich samolotach, przekazuje je do przetworzenia oraz odpowiada za uzupełenie tabeli na podstawie otrzymanych wyników
+ * \brief MainWindow::handle_result() - funkcja wyłapująca odpowiedź, wyszukuje informacje o Polskich samolotach,
+ * przekazuje je do przetworzenia oraz odpowiada za uzupełenie tabeli, na podstawie otrzymanych wyników.
  */
 
 void MainWindow::handle_result()
@@ -310,9 +312,9 @@ void MainWindow::handle_result()
 }
 
 /*!
- * \brief MainWindow::parsingData(QString planeRecordData) - funkcja do parsowania danych tekstowych oraz tworzenia obiektów klasy plane
+ * \brief MainWindow::parsingData(QString planeRecordData) - funkcja do parsowania danych tekstowych oraz tworzenia obiektów klasy plane.
  *
- * - planeRecordData - dane typu QString z informacjami o samolocie
+ * - planeRecordData - dane typu QString z informacjami o samolocie.
  *
  */
 
@@ -347,9 +349,9 @@ plane* MainWindow::parsingData(QString planeRecordData)
 }
 
 /*!
- * \brief MainWindow::toBoolean(QString textToCheck) - funkcja do konwersji zmiennej tekstowej na boolean
+ * \brief MainWindow::toBoolean(QString textToCheck) - funkcja do konwersji zmiennej tekstowej na boolean.
  *
- * - textToCheck - dane typu QString do przekonwertowania
+ * - textToCheck - dane typu QString do przekonwertowania.
  *
  */
 
@@ -367,10 +369,10 @@ bool MainWindow::toBoolean(QString textToCheck)
 
 
 /*!
- * \brief MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message) - funkcja zwracjaca indeks początku rekordu w otrzymenym ciagu do analizy
+ * \brief MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message) - funkcja zwracjąca indeks początku rekordu w otrzymanym ciagu do analizy.
  *
- * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland)
- * - message - zmienna typu QString zawiera odebrane dane z serwera
+ * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland).
+ * - message - zmienna typu QString zawiera odebrane dane z serwera.
  *
  */
 
@@ -388,10 +390,10 @@ int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
 }
 
 /*!
- * \brief MainWindow::searchForEnd(int firstCountryLetterIndex, QString message) - funkcja zwracjaca indeks końca rekordu w otrzymenym ciagu do analizy
+ * \brief MainWindow::searchForEnd(int firstCountryLetterIndex, QString message) - funkcja zwracjąca indeks końca rekordu w otrzymanym ciagu do analizy.
  *
- * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland)
- * - message - zmienna typu QString zawiera odebrane dane z serwera
+ * - firstCountryLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery szukanej frazy ( w naszym przypadku "P" - Poland).
+ * - message - zmienna typu QString zawiera odebrane dane z serwera.
  *
  */
 
@@ -409,11 +411,11 @@ int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
 }
 
 /*!
- * \brief MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message) - funkcja zwracająca rekord z danymi jednego samolotu
+ * \brief MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLetterIndex, QString message) - funkcja zwracająca rekord z danymi jednego samolotu.
  *
- * - firstRecordLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery rekordu infromacji o wybranym samolocie
- * - lastRecordLetterIndex - zmienna typu integer przechowuje indeks ostatniej litery rekordu infromacji o wybranym samolocie
- * - message - zmienna typu QString zawiera odebrane dane z serwera
+ * - firstRecordLetterIndex - zmienna typu integer przechowuje indeks pierwszej litery rekordu infromacji o wybranym samolocie.
+ * - lastRecordLetterIndex - zmienna typu integer przechowuje indeks ostatniej litery rekordu infromacji o wybranym samolocie.
+ * - message - zmienna typu QString zawiera odebrane dane z serwera.
  *
  */
 
@@ -432,7 +434,7 @@ QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLette
 
 
 /*!
- * \brief MainWindow::takeScreen() - funkcja wykonująca zrzut całego okna aplikcji
+ * \brief MainWindow::takeScreen() - funkcja wykonująca zrzut całego okna aplikcji.
  */
 
 void MainWindow::takeScreen()

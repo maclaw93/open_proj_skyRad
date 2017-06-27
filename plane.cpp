@@ -5,19 +5,19 @@
  *                     float timeVelocity, float longitude, float latitude, float altitude, bool onGround,
  *                     float velocity, float heading, float verticalRate, int sensors) - konstruktor obiektu klasy plane
  *
- * - icao24 - zmienna typu QString przechowująca unikalny ICAO 24-bitowy adres transpondera w kodze hex
- * - callsign - zmienna tpyu QString przechowuje 8 znakowy numer samolotu
- * - originCountry - zmienna typu QString przechowuje nazwę kraju powiząnge z numermem ICAO
- * - timePosition - unix timestamp (sekundy) dla ostatniej aktualiazji pozycji
- * - timeVelocity - unix timestamp (sekundy) dla ostatniej aktualizacji prędkości
- * - longitude - WGA-84 długość geograficzna w stopniach
- * - latitude - WGA-84 szerokość geograficzna w stopniach
- * - altitude - barometryczna lub geometryczna wysokość
- * - onGround - wartość logiczna odpowiadajaca stanowi samolotu na ziemi lub w powietrzu
- * - velocity - prędkość nad ziemią m/s
- * - heading - kierunek samolotu w stopniach zgodnie ze wskazówkami zegara od północy
- * - verticalRate - prędkość prostopadła do ziemi m/s (samolot sie wznosi)
- * - sensors - ID sensora wektora stanowego...
+ * - icao24 - zmienna typu QString przechowująca unikalny ICAO 24-bitowy adres transpondera w kodze hex;
+ * - callsign - zmienna typu QString przechowuje 8 znakowy numer samolotu;
+ * - originCountry - zmienna typu QString przechowuje nazwę kraju powiązaną z numermem ICAO;
+ * - timePosition - unix timestamp (sekundy) dla ostatniej aktualizacji pozycji;
+ * - timeVelocity - unix timestamp (sekundy) dla ostatniej aktualizacji prędkości;
+ * - longitude - WGA-84 długość geograficzna w stopniach;
+ * - latitude - WGA-84 szerokość geograficzna w stopniach;
+ * - altitude - barometryczna lub geometryczna wysokość;
+ * - onGround - wartość logiczna odpowiadająca stanowi samolotu na ziemi lub w powietrzu;
+ * - velocity - prędkość nad ziemią w m/s;
+ * - heading - kierunek samolotu w stopniach zgodnie ze wskazówkami zegara od północy;
+ * - verticalRate - prędkość prostopadła do ziemi m/s (samolot sie wznosi);
+ * - sensors - ID sensora wektora stanowego.
  */
 
 plane::plane(QString icao24, QString callsign, QString originCountry, float timePosition,

@@ -35,17 +35,17 @@
 
 #include <QDebug>
 
-/*! Klasa MainWindow - odpowiada za wygląd głownego okna programu, budowe layout-u, połączenie elementów okna z metodami
+/*! Klasa MainWindow - odpowiada za wygląd głownego okna programu, budowe layout-u, połączenie elementów okna z metodami.
  *
- * W obrębie klasy wykonywane są wszystkie działania związane z działaniami w głównym oknie programu.
- *
+ * W obrębie klasy wykonywane są wszystkie działania związane z działaniami w głównym oknie programu. Stanowi ona
+ * UI dla użytkownika.
  *
  * Klasa posiada:
- * prywatne sloty - pozwalające na otrzymywanie inforamcji
- * signały - do przesyłania danych do metod i innych klas
- * zmienne oraz wskażniki prywatne - potrzebne do poprawnego działania metod klasy oraz wywoływania
- * chronione funkcje - odpowiadające za akcje wewnątrz klasy
- * konstruktor jawny
+ * prywatne sloty - pozwalające na otrzymywanie inforamcji;
+ * signały - do przesyłania danych do metod i innych klas;
+ * zmienne oraz wskażniki prywatne - potrzebne do poprawnego działania metod klasy oraz wywoływania;
+ * chronione funkcje - odpowiadające za akcje wewnątrz klasy;
+ * konstruktor jawny.
 
     Michał Kluska & Maciek Kucharski, czerwiec 2017
 
@@ -64,9 +64,9 @@ public:
 
 private:
     QPixmap image;                              ///< zmienna zapamiętująca obraz
-    HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
-    QStandardItemModel *model;                  ///< wskaźnik na model
-    bool isFirstTime;                           ///< zmienna poczatkowa inicjuąca pobieranie danych
+    HttpRequestWorker *worker;                  ///< wskaźnik na worker-a obsługujący zapytania REST
+    QStandardItemModel *model;                  ///< wskaźnik na model danych wyświetlanych w tabeli
+    bool isFirstTime;                           ///< zmienna początkowa inicjująca pobieranie danych
 
     int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
     int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
@@ -80,45 +80,43 @@ private:
     QGridLayout* _mainLayout;   ///< wskaźnik na główny layout
     QMenuBar* _menuBar;         ///< wskaźnik na pasek menu
     QMenu* _mainManu;           ///< wskaźnik na menu główne
-    QMenu* _helpManu;           ///< wskaźnik na menu pomicy
-    QToolBar* _mainToolBar;     ///< wskaźnik na pasek narzędzi
-    QStatusBar* _mainStatusBar; ///< wskażnik na pasek statusu
+    QMenu* _helpManu;           ///< wskaźnik na menu pomocy
 
     //elementy GUI
 
-    QTableView* _tabele;            ///< wskażnik na tabele
-    QGroupBox* _leftPart;           ///< wskażnik na groupbox-a w lewej części okna
-    QVBoxLayout* _leftPartLayout;   ///< wskażnik na lewą część layout-a
+    QTableView* _tabele;            ///< wskaźnik na tabelę danych
+    QGroupBox* _rightPart;           ///< wskaźnik na groupbox-a w prawej części okna
+    QVBoxLayout* _rightPartLayout;   ///< wskaźnik na prawą część layout-u
 
-    QGroupBox* _timerGroup;         ///< wskażnik na groupbox-a panelu czasu
-    QGroupBox* _displTimeGroup;     ///< wskażnik na groupbox-a do wyświetlania czasu
-    QHBoxLayout* _timeDispLayout;   ///< wskażnik na layout z wyświetlaniem czasu
-    QLabel* _timeText;              ///< wskażnik na etykiete czasu
-    QLabel* _timeText2;             ///< wskażnik na etykiete czasu 1
-    QLabel* _timeText3;             ///< wskażnik na etykiete czasu 2
-    QLabel* _timerInd;              ///< wskażnik na etykiete interału zegara
-    QLabel* _timeInd;               ///< wskażnik na etykiete interału czasu
-    QVBoxLayout* _timerSetLayout;   ///< wskażnik na layout z elementami zegara
-    QPushButton* _acceptTimeButton; ///< wskażnik na przycisk do akceptacji czasu
-    QSlider* _timeSlider;           ///< wskażnik na suwak do zmiany czasu
-    QTimer* _timer;                 ///< wskażnik na zegar
-    CutdownTimer* _cutdownTimer;    ///< wskażnik na liczący w dół
+    QGroupBox* _timerGroup;         ///< wskaźnik na groupbox-a panelu czasu
+    QGroupBox* _displTimeGroup;     ///< wskaźnik na groupbox-a do wyświetlacza nastawy czasu odświeżnia
+    QHBoxLayout* _timeDispLayout;   ///< wskaźnik na layout z wyświetlaniem nastawy czasu odświeżnia
+    QLabel* _timeText;              ///< wskaźnik na etykiete czasu
+    QLabel* _timeText2;             ///< wskaźnik na etykiete czasu 2
+    QLabel* _timeText3;             ///< wskaźnik na etykiete czasu 3
+    QLabel* _timerInd;              ///< wskaźnik na etykiete wyświetlacza czasu do kolejnego odświeżania
+    QLabel* _timeInd;               ///< wskaźnik na etykiete wyświetlania interału czasu odświeżania
+    QVBoxLayout* _timerSetLayout;   ///< wskaźnik na layout z elementami zegara
+    QPushButton* _acceptTimeButton; ///< wskaźnik na przycisk do akceptacji czasu
+    QSlider* _timeSlider;           ///< wskaźnik na suwak do zmiany czasu
+    QTimer* _timer;                 ///< wskaźnik na zegar
+    CutdownTimer* _cutdownTimer;    ///< wskażnik na licznik liczący w dół
 
 protected:
-    QAction* actionUpdate;          ///< wskażnik na przycisk menu z akcją aktualizacji
-    QAction* actionExite;           ///< wskażnik na przycisk menu z akcją wyjścia
-    QAction* actionSaveWindow;      ///< wskażnik na przycisk menu z akcją zapisu zrzutu okna
-    QAction* actionAboutApp;        ///< wskażnik na przycisk menu z akcją o aplikacji
-    QAction* actionMinimized;       ///< wskażnik na przycisk menu z akcja minimalizacji okna
+    QAction* actionUpdate;          ///< wskaźnik na przycisk menu z akcją aktualizacji
+    QAction* actionExite;           ///< wskaźnik na przycisk menu z akcją wyjścia
+    QAction* actionSaveWindow;      ///< wskaźnik na przycisk menu z akcją zapisu zrzutu okna
+    QAction* actionAboutApp;        ///< wskaźnik na przycisk menu z akcją o aplikacji
+    QAction* actionMinimized;       ///< wskaźnik na przycisk menu z akcja minimalizacji okna
 
 private slots:
-    void updateData();                          ///< metoda aktualizujaca dane o samolotach
+    void updateData();                          ///< metoda aktualizująca dane o samolotach
     void handle_result();                       ///< metoda przyjmująca odebrane dane
-    void takeScreen();                          ///< metoda wykonywanie screenshot-a
+    void takeScreen();                          ///< metoda do wykonywania screenshot-a
     void saveScreen();                          ///< metoda do zapisywania screen-ów
     void aboutApp();                            ///< metoda do wyświetlania inforamcji o aplikacji
     void prepareTimer();                        ///< metoda do przygotowyania zegara
-    void updateTrigged();                       ///< metoda do aktualizacji wyzwalania
+    void updateTrigged();                       ///< metoda do wyzwalania aktualizacji
     void displRemaningTime();                   ///< metoda do wyświetlania pozostałego czasu
 
 signals:
