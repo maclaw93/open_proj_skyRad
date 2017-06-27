@@ -89,9 +89,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //stoworzenie opcji z belki menu
     actionUpdate =_mainManu->addAction("Aktualizuj");
     actionUpdate->setToolTip("Pobieranie danych i ich parsowanie");
+    actionUpdate->setShortcut(QKeySequence(tr("Ctrl+A")));
     actionSaveWindow = _mainManu->addAction("Zapisz zrzut ekranu");
     actionMinimized = _mainManu->addAction("Minimalizuj");
+    actionMinimized->setShortcut(QKeySequence("Ctrl+M"));
     actionExite = _mainManu->addAction("Wyjscie");
+    actionExite->setShortcut(QKeySequence("Alt+Esc"));
     actionAboutApp = _helpManu->addAction("O programie");
     _mainManu->setTitle("Pilk");
     _helpManu->setTitle("Pomoc");
