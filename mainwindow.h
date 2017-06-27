@@ -35,13 +35,13 @@
 
 #include <QDebug>
 
-/*! Klasa MainWindow - odpowiada wygląd głownego okna programu, budowe layout-u, połączenie elementów okna z metodami
+/*! Klasa MainWindow - odpowiada za wygląd głownego okna programu, budowe layout-u, połączenie elementów okna z metodami
  *
  * W obrębie klasy wykonywane są wszystkie działania związane z działaniami w głównym oknie programu.
  *
  *
  * Klasa posiada:
- * chronione sloty - pozwalające na otrzymywanie inforamcji
+ * prywatne sloty - pozwalające na otrzymywanie inforamcji
  * signały - do przesyłania danych do metod i innych klas
  * zmienne oraz wskażniki prywatne - potrzebne do poprawnego działania metod klasy oraz wywoływania
  * chronione funkcje - odpowiadające za akcje wewnątrz klasy
@@ -66,7 +66,7 @@ private:
     QPixmap image;                              ///< zmienna zapamiętująca obraz
     HttpRequestWorker *worker;                  ///< wskaźnik na worker-a
     QStandardItemModel *model;                  ///< wskaźnik na model
-    bool isFirstTime;                           ///< zmienna poczatkowa inicjacyjna pobieranie danych
+    bool isFirstTime;                           ///< zmienna poczatkowa inicjuąca pobieranie danych
 
     int searchForBeginning(int firstCountryLetterIndex, QString message);                                   ///< metoda szukająca poczatku rekordu
     int searchForEnd(int firstCountryLetterIndex, QString message);                                         ///< metoda szukająca końca rekordu
@@ -122,7 +122,7 @@ private slots:
     void displRemaningTime();                   ///< metoda do wyświetlania pozostałego czasu
 
 signals:
-    void go();
+    void go();                                  ///< sygnał uruchamiający timery
 
 };
 

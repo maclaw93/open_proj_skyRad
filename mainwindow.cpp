@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 
 /*!
- *  \brief MainWindow::MainWindow - konstruktor klasy. W ciele znajduje się tworzenie oraz budowanie wygladu okna glównego programu.
+ *  \brief MainWindow::MainWindow - konstruktor klasy. W wywołuje tworzenie oraz budowanie wygladu okna glównego programu.
  *  \param parent - wskaznik na obiekt nadrzędny
  *
  */
@@ -52,10 +52,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _timeDispLayout->addWidget(_timeInd);
     _displTimeGroup->setLayout(_timeDispLayout);
     _displTimeGroup->setStyleSheet("border:0; margin: 0px 0px 0px;");
-
     //piąta linia
     _timeText3->setText("Licznik Timera [sek]:");
-    _timerInd->setNum(0.0);
+    _timerInd->setNum(0);
     _timerInd->setAlignment(Qt::AlignHCenter);
 
     //ulorzenie rzeczy od timera
@@ -74,7 +73,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _timerGroup->setTitle("Timer");
     _timerGroup->setStyleSheet("QGroupBox { border: 1px solid grey; border-radius: 9px; margin-top: 0.5em;} QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 0px 0 0px;}");
     _leftPartLayout->addWidget(_timerGroup);
-    _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //to powoduje ze zostaje tej samej wielkosci ta grupa
+    _leftPartLayout->setSizeConstraint(QLayout::SetFixedSize);  //grupa pozostaje tej samej wielkości
     _leftPart->setLayout(_leftPartLayout);
     _leftPart->setStyleSheet("margin: 0px 0px 0px;");
     _mainLayout->addWidget(_tabele,0,0,4,1); //tabela w komorce (0,0), ma sie rozciagac do IV rzedu i I kolumny
@@ -105,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setConnections();
 
+    //przygotowanie tabeli danych
     model = new QStandardItemModel(1,1,this);
     model->setHorizontalHeaderItem(0, new QStandardItem(QString("Icao24")));
     model->setHorizontalHeaderItem(1, new QStandardItem(QString("Callsign")));
@@ -172,7 +172,7 @@ void MainWindow::setConnections()
 }
 
 /*!
- * \brief MainWindow::displRemaningTime() - funkcja pozostały czas do następnego odswierzenia.
+ * \brief MainWindow::displRemaningTime() - funkcja zwracajaca pozostały czas do następnego odswierzenia.
  */
 
 void MainWindow::displRemaningTime()
@@ -192,8 +192,7 @@ void MainWindow::updateTrigged()
 }
 
 /*!
- * \brief MainWindow::prepareTimer(int timerPeriod) - funkcja nastawiająca interwał Timer'a
- *  - timerPeriod - wielkość ustawionego okresu w sekundach
+ * \brief MainWindow::prepareTimer() - funkcja przygotowywująca i wyzwalająca timery
  */
 void MainWindow::prepareTimer()
 {
@@ -466,7 +465,6 @@ QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLette
 void MainWindow::takeScreen()
 {
     image = QPixmap::grabWidget(this);                                        // sposób nr1 - tylko widget
-
     saveScreen();
 }
 
@@ -506,6 +504,7 @@ void MainWindow::aboutApp()
             QString("<hr><br>Osiagniete cele:<br /><ul>") +
             QString("<li>Pobiera informacje o polskich samolotach w powietrzu poprzez zapytanie REST</li>") +
             QString("<li>Wyswietla inforamcje w formie tabelki</li>") +
+            QString("<li>Automatycznie odswierza dane co ustalany przez urzytkownika czas</li>") +
             QString("<li>Pieknie dziala \\(^.^)/ .</li></ul>");
 
     mssgbox.information(this,"Informacje o programie",info);

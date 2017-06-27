@@ -3,16 +3,16 @@
 
 #include <QTimer>
 
-/*! Klasa CutdownTimer - odpowiada za działanie zegara
+/*! Klasa CutdownTimer - odpowiada za dostarczenie licznika czasu.
  *
- * W obrębie klasy wykonywane działania na zegarze.
+ * W obrębie klasy wykonywane są działania na zegarze. Rozszerza funkcjonalności klasy QTimer.
  *
  *
  * Klasa posiada:
- * chronione sloty - pozwalające na otrzymywanie inforamcji
+ * prywatne sloty - pozwalające na otrzymywanie inforamcji
  * signały - do przesyłania danych do metod i innych klas
- * zmienne oraz wskażniki prywatne - potrzebne do poprawnego działania metod klasy oraz wywoływania
- * chronione funkcje - odpowiadające za akcje wewnątrz klasy
+ * zmienne oraz wskaźniki prywatne - potrzebne do poprawnego działania metod klasy oraz wywoływania
+ * prywatne funkcje - odpowiadające za akcje wewnątrz klasy
  * konstruktor jawny
 
     Michał Kluska & Maciek Kucharski, czerwiec 2017
@@ -29,17 +29,17 @@ public:
     void setTimeToElaps(int sek);                                       ///< metoda ustawiająca czas do odliczania
     int getTimeToElaps();                                               ///< metoda pobierająca czas do odliczania
     int getRameining();                                                 ///< metoda pobierająca pozostały czas do odliczania
-    void setRepetating(bool rep);                                       ///< metoda ustawiająca powtarzanie zegara
-    bool getRepetating();                                               ///< metoda pobierająca powtarzanie zegara
-    int timeElapsed;                                                    ///< zmienna przechwowujaca czas do odliczenia
+    void setRepetating(bool rep);                                       ///< metoda ustawiająca zapętlenie licznika
+    bool getRepetating();                                               ///< metoda pobierająca zapętlenie licznika
+    int timeElapsed;                                                    ///< zmienna przechowywująca czas do odliczenia
 
 private:
     int _timeToElaps;               ///< zmienna przechowujaca czas do zakonczenia odlicznia
-    bool isRepetating;              ///< zmienna przechowujaca watość logiczną kontynuacja odliczania
+    bool isRepetating;              ///< zmienna przechowujaca watość logiczną zapętlenia licznika
 
 signals:
-    void elapsed();                 ///<
-    void elapsStrated();            ///<
+    void elapsed();                 ///< sygnał wskazujący upłynięcie czasu
+    void elapsStrated();            ///< sygnał wyzwalający licznik czasu
 
 public slots:
     void elapsStop();               ///< metoda do zakonczenia odliczania

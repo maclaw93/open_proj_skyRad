@@ -3,7 +3,9 @@
 
 /*!
  *  \brief CutdownTimer::CutdownTimer - konstruktor klasy. W ciele znajdują się połączenia sygnałów i slotów, ustanienia powtarzania i czasu do odliczania.
- *  \param parent - wskaznik na obiekt nadrzędny
+ *  \param parent - wskaznik na obiekt nadrzędny.
+ *  \param sek - nastawa czasu dla licznika, wyrażana w sekundach.
+ *  \param repetative - flaga do zapętlania licznika
  *
  */
 
@@ -24,7 +26,7 @@ CutdownTimer::CutdownTimer(QObject *parent, int sek, bool repetative) :
 }
 
 /*!
- * \brief CutdownTimer::elapsStrat() -
+ * \brief CutdownTimer::elapsStrat() - metoda wyzwalająca licznik czasu
  */
 
 void CutdownTimer::elapsStrat()
@@ -34,7 +36,7 @@ void CutdownTimer::elapsStrat()
 }
 
 /*!
- * \brief CutdownTimer::setRepetating() -
+ * \brief CutdownTimer::setRepetating() - metoda ustawiająca flage zapętlenia licznika
  */
 
 void CutdownTimer::setRepetating(bool rep)
@@ -43,7 +45,7 @@ void CutdownTimer::setRepetating(bool rep)
 }
 
 /*!
- * \brief CutdownTimer::getRepetating() -
+ * \brief CutdownTimer::getRepetating() -metoda zwracająca flagę zapętlenia licznika
  */
 
 bool CutdownTimer::getRepetating()
@@ -85,7 +87,7 @@ void CutdownTimer::elapsStop()
 /*!
  * \brief CutdownTimer::setTimeToElaps(int sek) - funkcja ustawiająca czas do odliczania
  *
- * - sek - zmienna typu integer zawierająca ilość sekund do odliczania
+ * \param sek - zmienna typu integer zawierająca ilość sekund do odliczania
  */
 
 void CutdownTimer::setTimeToElaps(int sek)
