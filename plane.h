@@ -9,7 +9,6 @@ public:
     plane(QString icao24, QString callsign, QString originCountry, float timePosition,
           float timeVelocity, float longitude, float latitude, float altitude, bool onGround,
           float velocity, float heading, float verticalRate, int sensors);                  ///< konstruktor obiektu
-    ~plane();
 
     QString getIcao24() const;                  ///< metoda do odczytu zmiennej prywatnej icao24
     void setIcao24(const QString &value);

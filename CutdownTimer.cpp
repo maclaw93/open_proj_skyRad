@@ -1,5 +1,4 @@
 #include "CutdownTimer.h"
-#include <QDebug>
 
 /*!
  *  \brief CutdownTimer::CutdownTimer - konstruktor klasy. W ciele znajdują się połączenia sygnałów i slotów, ustanienia powtarzania i czasu do odliczania.
@@ -13,7 +12,6 @@ CutdownTimer::CutdownTimer(QObject *parent, int sek, bool repetative) :
     QTimer(parent)
 {
     this->setInterval(1000);
-    qDebug() << "ElapsTimer created, his id: " << this->timerId();
     setRepetating(repetative);
     setTimeToElaps(sek);
 
@@ -75,12 +73,7 @@ void CutdownTimer::elapsStop()
 {
     if(!getRepetating())
     {
-        qDebug() << "its over";
         this->stop();
-    }
-    else
-    {
-        qDebug() << "new round";
     }
 }
 
@@ -119,7 +112,6 @@ int CutdownTimer::getRameining()
 
 CutdownTimer::~CutdownTimer()
 {
-    qDebug() << "its the final cutdown!!!";
     this->stop();
     this->deleteLater();
 }

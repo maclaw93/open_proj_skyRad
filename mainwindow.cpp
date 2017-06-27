@@ -124,7 +124,7 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setHorizontalHeaderItem(12, new QStandardItem(QString("Sensors")));
 
     this->_tabele->setModel(model);
-    _tabele->setEditTriggers(QAbstractItemView::NoEditTriggers);//zabezpieczenie nie edytowalnosci tabelki
+    _tabele->setEditTriggers(QAbstractItemView::NoEditTriggers); //zabezpieczenie nie edytowalnosci tabelki
 }
 
 /*!
@@ -201,7 +201,6 @@ void MainWindow::prepareTimer()
 {
     this->_timer->setInterval((this->_timeSlider->value())*1000);
     this->_cutdownTimer->setTimeToElaps(this->_timeSlider->value());
-    qDebug() << "Timer go!!";
     if(isFirstTime)
     {
         this->updateData();
@@ -219,12 +218,6 @@ void MainWindow::updateData()
     QString url_str = "https://opensky-network.org/api/states/all";
 
     HttpRequestInput input(url_str, "GET");
-
-    //input.add_var("lon", "100.75");
-    //input.add_var("lat", "1.5");
-    //input.add_var("begin", "2014-02-01");
-    //input.add_var("api_key", "DEMO_KEY");
-
     worker->execute(&input);
 }
 
@@ -256,14 +249,10 @@ void MainWindow::handle_result()
     while ((firstCountryLetterIndex = message.indexOf(match, firstCountryLetterIndex)) != -1)
     {
         count++;
-        qDebug() << "Found Poland tag at index position" << firstCountryLetterIndex;
 
         firstRecordLetterIndex = searchForBeginning(firstCountryLetterIndex, message);
-        qDebug() << "Record begin: " << firstRecordLetterIndex;
         lastRecordLetterIndex = searchForEnd(firstCountryLetterIndex, message);
-        qDebug() << "Record finish: " << lastRecordLetterIndex;
         planeRecordData = selectRecord(firstRecordLetterIndex, lastRecordLetterIndex, message);
-        qDebug() << "Record: " << planeRecordData;
 
         planesObjects.push_back(parsingData(planeRecordData));
 
@@ -271,68 +260,52 @@ void MainWindow::handle_result()
 
     }
 
-    qDebug() << "Amount of elements in QList: " << planesObjects.size();
 
     for (int i = 0; i < planesObjects.size(); i++)
     {
-        QStandardItem *row0 = new QStandardItem(planesObjects[i]->getIcao24());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row0 = new QStandardItem(planesObjects[i]->getIcao24());
         model->setItem(i, 0, row0);
 
-        QStandardItem *row1 = new QStandardItem(planesObjects[i]->getCallsign());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row1 = new QStandardItem(planesObjects[i]->getCallsign());
         model->setItem(i, 1, row1);
 
-        QStandardItem *row2 = new QStandardItem(planesObjects[i]->getOriginCountry());          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row2 = new QStandardItem(planesObjects[i]->getOriginCountry());
         model->setItem(i, 2, row2);
 
-        QStandardItem *row3 = new QStandardItem(QString::number(planesObjects[i]->getTimePosition()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row3 = new QStandardItem(QString::number(planesObjects[i]->getTimePosition()));
         model->setItem(i, 3, row3);
 
-        QStandardItem *row4 = new QStandardItem(QString::number(planesObjects[i]->getTimeVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row4 = new QStandardItem(QString::number(planesObjects[i]->getTimeVelocity()));
         model->setItem(i, 4, row4);
 
-        QStandardItem *row5 = new QStandardItem(QString::number(planesObjects[i]->getLongitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row5 = new QStandardItem(QString::number(planesObjects[i]->getLongitude()));
         model->setItem(i, 5, row5);
 
-        QStandardItem *row6 = new QStandardItem(QString::number(planesObjects[i]->getLatitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row6 = new QStandardItem(QString::number(planesObjects[i]->getLatitude()));
         model->setItem(i, 6, row6);
 
-        QStandardItem *row7 = new QStandardItem(QString::number(planesObjects[i]->getAltitude()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row7 = new QStandardItem(QString::number(planesObjects[i]->getAltitude()));
         model->setItem(i, 7, row7);
 
-        QStandardItem *row8 = new QStandardItem(QString::number(planesObjects[i]->getOnGround()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row8 = new QStandardItem(QString::number(planesObjects[i]->getOnGround()));
         model->setItem(i, 8, row8);
 
-        QStandardItem *row9 = new QStandardItem(QString::number(planesObjects[i]->getVelocity()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row9 = new QStandardItem(QString::number(planesObjects[i]->getVelocity()));
         model->setItem(i, 9, row9);
 
-        QStandardItem *row10 = new QStandardItem(QString::number(planesObjects[i]->getHeading()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row10 = new QStandardItem(QString::number(planesObjects[i]->getHeading()));
         model->setItem(i, 10, row10);
 
-        QStandardItem *row11 = new QStandardItem(QString::number(planesObjects[i]->getVerticalRate()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row11 = new QStandardItem(QString::number(planesObjects[i]->getVerticalRate()));
         model->setItem(i, 11, row11);
 
-        QStandardItem *row12 = new QStandardItem(QString::number(planesObjects[i]->getSensors()));          //GDZIE ZABIJAĆ TE OBIEKTY????
+        QStandardItem *row12 = new QStandardItem(QString::number(planesObjects[i]->getSensors()));
         model->setItem(i, 12, row12);
 
-        qDebug() << "Plane: " << i;
-        qDebug() << "icao24: " << planesObjects[i]->getIcao24();
-        qDebug() << "callsign: " << planesObjects[i]->getCallsign();
-        qDebug() << "originCountry: " << planesObjects[i]->getOriginCountry();
-        qDebug() << "timePosition: " << planesObjects[i]->getTimePosition();
-        qDebug() << "timeVelocity: " << planesObjects[i]->getTimeVelocity();
-        qDebug() << "longitude: " << planesObjects[i]->getLongitude();
-        qDebug() << "latitude: " << planesObjects[i]->getLatitude();
-        qDebug() << "altitude: " << planesObjects[i]->getAltitude();
-        qDebug() << "onGround: " << planesObjects[i]->getOnGround();
-        qDebug() << "velocity: " << planesObjects[i]->getVelocity();
-        qDebug() << "heading: " << planesObjects[i]->getHeading();
-        qDebug() << "verticalRate: " << planesObjects[i]->getVerticalRate();
-        qDebug() << "sensors: " << planesObjects[i]->getSensors();
-        qDebug() << "-------------------------------------------";
     }
     this->_tabele->setModel(model);
 
-    qDebug() << "Number of Poland tag at mesage" << count;          // początek informacji o samolocie zaczyna się 21 znaków wcześniej "[" do "]"
+    qDebug() << "Number of Poland tag at mesage" << count;
 
 }
 
@@ -354,7 +327,6 @@ plane* MainWindow::parsingData(QString planeRecordData)
         if ((planeRecordData[i] == ',') || (planeRecordData[i] == ']'))
         {
             planeData[indexPlaneData] = tempData;
-//            qDebug() << tempData;
             tempData = "";
             indexPlaneData++;
         }
@@ -363,13 +335,12 @@ plane* MainWindow::parsingData(QString planeRecordData)
         {
             tempData += planeRecordData[i];
         }
-        //["4891a6","ENT582  ","Poland",1497533490,1497533490,7.2239,53.5819,10972.8,false,197.6,219.82,0,null,11193.78,null,false,false,0]
     }
 
     plane* Plane = new plane(planeData[0], planeData[1], planeData[2], planeData[3].toFloat(),
-                    planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
-                    planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
-                    planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
+            planeData[5].toFloat(),planeData[6].toFloat(),planeData[7].toFloat(),
+            planeData[8].toFloat(),toBoolean(planeData[9]),planeData[10].toFloat(),
+            planeData[11].toFloat(),planeData[12].toFloat(),planeData[13].toInt());
 
     return Plane;
 
@@ -410,7 +381,6 @@ int MainWindow::searchForBeginning(int firstCountryLetterIndex, QString message)
     do
     {
         tempLetterIndex--;
-
     }
     while(message[tempLetterIndex] != '[');
 
@@ -432,8 +402,8 @@ int MainWindow::searchForEnd(int firstCountryLetterIndex, QString message)
     do
     {
         tempLetterIndex++;
-
-    }while(message[tempLetterIndex] != ']');
+    }
+    while(message[tempLetterIndex] != ']');
 
     return tempLetterIndex;
 }
@@ -467,7 +437,7 @@ QString MainWindow::selectRecord(int firstRecordLetterIndex, int lastRecordLette
 
 void MainWindow::takeScreen()
 {
-    image = QPixmap::grabWidget(this);                                        // sposób nr1 - tylko widget
+    image = QPixmap::grabWidget(this);
     saveScreen();
 }
 
@@ -499,7 +469,6 @@ void MainWindow::aboutApp()
     QMessageBox mssgbox;
     QString info;
     info = QString("<b>Nasz wspanialy radiator serwerowy :D</b><br /><br />") +
-            //QString("<p><img src=\":/Images/Images/logo_ver2.png\" alt=\"logo\"></p>")+
             QString("Program <em><b>\"skyRad\"</b></em>   jest efektem pracy przy projekcie: \"Radiator Serwerowy wyswietlajacy dynamicznie inforamcje\" ") +
             QString("Stanowi on projekt zaliczeniowym autorstwa studentow: <br />")+
             QString("Michala Kluski  i Macieja Kucharskiego <br>") +

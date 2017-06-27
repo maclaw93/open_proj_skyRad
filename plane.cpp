@@ -42,16 +42,6 @@ plane::plane(QString icao24, QString callsign, QString originCountry, float time
 }
 
 /*!
- * \brief plane::~plane() - destruktor
- */
-
-plane::~plane()
-{
-
-}
-
-
-/*!
  * \brief plane::getIcao24() - funkcja zwraca wartości pola prywatnego icao24 klasy plane
  */
 
